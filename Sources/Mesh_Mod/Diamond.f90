@@ -1,6 +1,11 @@
 !==============================================================================!
   subroutine Mesh_Mod_Diamond
 !------------------------------------------------------------------------------!
+!   Diamond was originally supposed to speed up the mesh generation, but it    !
+!   actually slows down the execution by some 10% or so.  I am not sure if     !
+!   it leads to any improvement in mesh quality, hard to say without some      !
+!   tractable quality measures.
+!------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
   integer :: ea, eb, eac, ead, ebc, ebd, s
@@ -17,40 +22,45 @@
       ! If both are off, doesn't make sense to continue
       if(ea .ne. OFF .and. eb .ne. OFF) then
 
-        ! Handle ea
-        if(elem(ea) % ei .eq. eb) then
-          ead = elem(ea) % ej
-          eac = elem(ea) % ek
-        end if
-        if(elem(ea) % ej .eq. eb) then
-          ead = elem(ea) % ek
-          eac = elem(ea) % ei
-        end if
-        if(elem(ea) % ek .eq. eb) then
-          ead = elem(ea) % ei
-          eac = elem(ea) % ej
-        end if
+        if( elem(ea) % state .ne. DONE .and.  &
+            elem(eb) % state .ne. DONE ) then
 
-        ! Handle eb
-        if(elem(eb) % ei .eq. ea) then
-          ebc = elem(eb) % ej
-          ebd = elem(eb) % ek
-        end if
-        if(elem(eb) % ej .eq. ea) then
-          ebc = elem(eb) % ek
-          ebd = elem(eb) % ei
-        end if
-        if(elem(eb) % ek .eq. ea) then
-          ebc = elem(eb) % ei
-          ebd = elem(eb) % ej
-        end if
+          ! Handle ea
+          if(elem(ea) % ei .eq. eb) then
+            ead = elem(ea) % ej
+            eac = elem(ea) % ek
+          end if
+          if(elem(ea) % ej .eq. eb) then
+            ead = elem(ea) % ek
+            eac = elem(ea) % ei
+          end if
+          if(elem(ea) % ek .eq. eb) then
+            ead = elem(ea) % ei
+           eac = elem(ea) % ej
+          end if
 
-        if( (eac .eq. OFF .or. elem(eac) % state .eq. DONE)  .and.  &
-            (ebc .eq. OFF .or. elem(ebc) % state .eq. DONE)  .and.  &
-            (ead .eq. OFF .or. elem(ead) % state .eq. DONE)  .and.  &
-            (ebd .eq. OFF .or. elem(ebd) % state .eq. DONE) ) then
-          elem(ea) % state = DONE
-          elem(eb) % state = DONE
+          ! Handle eb
+          if(elem(eb) % ei .eq. ea) then
+            ebc = elem(eb) % ej
+            ebd = elem(eb) % ek
+          end if
+          if(elem(eb) % ej .eq. ea) then
+            ebc = elem(eb) % ek
+            ebd = elem(eb) % ei
+          end if
+          if(elem(eb) % ek .eq. ea) then
+            ebc = elem(eb) % ei
+            ebd = elem(eb) % ej
+          end if
+
+          if( (eac .eq. OFF .or. elem(eac) % state .eq. DONE)  .and.  &
+              (ebc .eq. OFF .or. elem(ebc) % state .eq. DONE)  .and.  &
+              (ead .eq. OFF .or. elem(ead) % state .eq. DONE)  .and.  &
+              (ebd .eq. OFF .or. elem(ebd) % state .eq. DONE) ) then
+            elem(ea) % state = DONE
+            elem(eb) % state = DONE
+          end if
+
         end if
 
       end if  ! ea and eb are not off
