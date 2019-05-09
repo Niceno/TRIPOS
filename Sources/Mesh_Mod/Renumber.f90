@@ -7,6 +7,8 @@
   integer :: new_elem, new_node, new_side, next_e, next_s, lowest
 !==============================================================================!
 
+  call Cpu_Timer_Mod_Start('Mesh_Mod_Renumber')
+
   ! Initialize new_numbs
   do n = 0, n_node-1
     node(n) % new_numb = OFF
@@ -48,13 +50,13 @@
  
         if( i+j+k+2 .eq. abs(i) + abs(j) + abs(k) ) then
           if( (i .eq. OFF) .and. (j+k) < lowest) then
-            next_e=e;  lowest=j+k
+            next_e = e;  lowest = j+k
           end if
           if( (j .eq. OFF) .and. (i+k) < lowest) then
-            next_e=e;  lowest=i+k;
+            next_e = e;  lowest = i+k
           end if
           if( (k .eq. OFF) .and. (i+j) < lowest) then
-            next_e=e;  lowest=i+j
+            next_e = e;  lowest = i+j
           end if
         end if
       end if
@@ -93,13 +95,13 @@
 
     do e = 0, n_elem-1
       if(elem(e) % mark .ne. OFF .and. elem(e) % new_numb .eq. OFF) then
-        i=node(elem(e) % i) % new_numb
-        j=node(elem(e) % j) % new_numb
-        k=node(elem(e) % k) % new_numb
+        i = node(elem(e) % i) % new_numb
+        j = node(elem(e) % j) % new_numb
+        k = node(elem(e) % k) % new_numb
 
         if( (i+j+k) < lowest ) then
-          next_e=e;
-          lowest=i+j+k;
+          next_e = e;
+          lowest = i+j+k
         end if
       end if
     end do
@@ -113,7 +115,7 @@
 3 continue
 
   !---------------------------!
-  !   Renumeration of nodes   !
+  !   Renumeration of sides   !
   !---------------------------!
   do
     lowest = n_node * 2
@@ -138,5 +140,7 @@
     if(next_s .eq. OFF) goto 4  ! effectivelly: do ... while(next_s .ne. OFF)
   end do
 4 continue
+
+  call Cpu_Timer_Mod_Stop('Mesh_Mod_Renumber')
 
   end subroutine
