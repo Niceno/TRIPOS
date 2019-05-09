@@ -26,30 +26,32 @@
   !----------------------------------------------!
   do e = 0, n_elem-1
     if(elem(e) % mark .ne. OFF) then
-      ei = elem(e) % ei
-      ej = elem(e) % ej
-      ek = elem(e) % ek
+      if(elem(e) % state .ne. DONE) then
+        ei = elem(e) % ei
+        ej = elem(e) % ej
+        ek = elem(e) % ek
 
-      f = (  node(elem(e) % i) % f  &
-           + node(elem(e) % j) % f  &
-           + node(elem(e) % k) % f) / 3.0
+        f = (  node(elem(e) % i) % f  &
+             + node(elem(e) % j) % f  &
+             + node(elem(e) % k) % f) / 3.0
 
-      elem(e) % state = WAITING
+        elem(e) % state = WAITING
 
-      ! Ideal triangle would have r_tol equal to 0.577
-      ! Version 1.5d introduced variable r_tol which 
-      ! can be set by command line option.  Before,
-      ! it was constant equal to 0.7
-      if(elem(e) % r_out < r_tol*f) elem(e) % state = DONE
+        ! Ideal triangle would have r_tol equal to 0.577
+        ! Version 1.5d introduced variable r_tol which 
+        ! can be set by command line option.  Before,
+        ! it was constant equal to 0.7
+        if(elem(e) % r_out < r_tol*f) elem(e) % state = DONE
 
-      ! Even this is possible
-      if(ei .ne. OFF .and.  &
-         ej .ne. OFF .and.  &
-         ek .ne. OFF) then
-        if(elem(ei) % state .eq. DONE .and.  &
-           elem(ej) % state .eq. DONE .and.  &
-           elem(ek) % state .eq. DONE) then
-          elem(e) % state = DONE
+        ! Even this is possible
+        if(ei .ne. OFF .and.  &
+           ej .ne. OFF .and.  &
+           ek .ne. OFF) then
+          if(elem(ei) % state .eq. DONE .and.  &
+             elem(ej) % state .eq. DONE .and.  &
+             elem(ek) % state .eq. DONE) then
+            elem(e) % state = DONE
+          end if
         end if
       end if
     end if
