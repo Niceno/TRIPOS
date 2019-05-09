@@ -70,7 +70,10 @@
     n = elem(ugly) % k
   end if
 
-  if(s .eq. OFF) return
+  if(s .eq. OFF) then
+    call Cpu_Timer_Mod_Stop('Mesh_Mod_New_Node')
+    return
+  end if
 
   xm = 0.5 * (node(side(s) % c) % x + node(side(s) % d) % x)
   ym = 0.5 * (node(side(s) % c) % y + node(side(s) % d) % y)
