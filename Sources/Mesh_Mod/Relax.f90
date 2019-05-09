@@ -6,6 +6,8 @@
   integer :: s, t, e
 !==============================================================================!
 
+  call Cpu_Timer_Mod_Start('Mesh_Mod_Relax')
+
   do t = 6, 3, -1
     do s = 0, n_side-1
 
@@ -29,5 +31,7 @@
 
     end do
   end do
+
+  call Cpu_Timer_Mod_Stop('Mesh_Mod_Relax')
 
   end subroutine
