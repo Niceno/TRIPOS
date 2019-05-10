@@ -40,6 +40,7 @@
     line( 1: 1) = "#"
     line(57:57) = "#"
     line( 3: 3+len_trim(funct_name(f))) = funct_name(f)
+    line(29:29) = ":"
     write(line(31:38), "(f8.3)") funct_time(f)
     line(40:42) = "[s]"
     write(line(47:50), "(f4.1)") funct_time(f) / total_time * 100.0
@@ -48,5 +49,6 @@
   end do
 
   print *, "#=======================================================#"
+  print *, ""
 
   end subroutine
