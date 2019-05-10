@@ -20,7 +20,6 @@
     side(s) % new_numb = OFF
   end do
 
-  ! These should be 1 in the future, if we want to count from one
   new_elem = 0
   new_node = 0
   new_side = 0
