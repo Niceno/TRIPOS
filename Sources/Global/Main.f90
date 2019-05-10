@@ -154,6 +154,12 @@
   print *, "Renumerating nodes, elements and sides. Please wait !"
   call Mesh_Mod_Renumber
 
+  !----------------------------!
+  !   Process material marks   !
+  !----------------------------!
+  print *, "Processing material marks. Please wait !"
+  call Mesh_Mod_Materials
+
   !-----------------------------------------!
   !   Save mesh in native Easymesh format   !
   !-----------------------------------------!
