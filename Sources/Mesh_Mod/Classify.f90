@@ -44,7 +44,9 @@
         ! Version 1.5d introduced variable r_tol which 
         ! can be set by command line option.  Before,
         ! it was constant equal to 0.7
-        if(elem(e) % r_ex < r_tol*f) elem(e) % state = DONE
+        if(elem(e) % r_ex < r_tol*f) then
+          elem(e) % state = DONE
+        end if
 
         ! Even this is possible
         if(ei .ne. OFF .and.  &
@@ -84,7 +86,7 @@
         if(elem(e) % state .eq. ACTIVE .and.  &
            elem(e) % r_rat > max_ratio) then
           max_ratio = max(max_ratio,   elem(e) % r_rat)
-          ugly  = e
+          ugly = e
         end if
       end if
     end do
