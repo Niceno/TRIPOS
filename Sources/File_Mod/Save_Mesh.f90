@@ -43,11 +43,11 @@
   ! Save
   write(FU, *) r_n_node
   do n=0, r_n_node-1
-    write(FU, "(i4, a1, 2es22.13e3, i4)")  &
+    write(FU, "(i6, a1, 2es22.13e3, i4)")  &
                        n, ":", r_node(n) % x, r_node(n) % y, r_node(n) % mark
   end do
-  write(FU, "(a)") "--------------------------------------------------------"
-  write(FU, "(a)") "   n:  x                     y                      mark"
+  write(FU, "(a)") "----------------------------------------------------------"
+  write(FU, "(a)") "     n:  x                     y                      mark"
 
   close(FU)
 
@@ -96,17 +96,19 @@
   ! Save
   write(FU, *) r_n_elem
   do e=0, r_n_elem-1
-    write(FU, "(i4, a1, 9i5, 2es22.13e3, i4)")                     &
+    write(FU, "(i6, a1, 9i6, 2es22.13e3, i4)")                     &
           e, ":", r_elem(e) % i,  r_elem(e) % j,  r_elem(e) % k,   &
                   r_elem(e) % ei, r_elem(e) % ej, r_elem(e) % ek,  &
                   r_elem(e) % si, r_elem(e) % sj, r_elem(e) % sk,  &
                   r_elem(e) % xv, r_elem(e) % yv,                  &
                   r_elem(e) % material
   end do
-  write(FU, "(a)") "---------------------------------------------------" // &
-                   "--------------------------------------------------"
-  write(FU, "(a)") "   e:   i,   j,   k,  ei,  ej,  ek,  si,  sj,  sk" // &
-                   "   xv,                   yv,                    sign"
+  write(FU, "(a)") "-----------------------------------------------------" // &
+                   "-----------------------------------------------------" // &
+                   "------"
+  write(FU, "(a)") "     e:  i,    j,    k,   ei,   ej,   ek,"  // &
+                   "   si,   sj,   sk"                          // &
+                   "     xv,                   yv,                    sign"
   close(FU)
 
   !---------------------------------!
@@ -146,13 +148,13 @@
   ! Save
   write(FU, *) r_n_side
   do s=0, r_n_side-1
-    write(FU, "(i4, a1, 5i4)")                            &
+    write(FU, "(i6, a1, 5i6)")                            &
                  s, ":", r_side(s) % c,  r_side(s) % d,   &
                          r_side(s) % ea, r_side(s) % eb,  &
                          r_side(s) % mark
   end do
-  write(FU, "(a)") "--------------------------------"
-  write(FU, "(a)") "   s:    c    d   ea   eb   mark"
+  write(FU, "(a)") "-------------------------------------"
+  write(FU, "(a)") "     s:   c     d    ea    eb    mark"
 
   close(FU)
 
