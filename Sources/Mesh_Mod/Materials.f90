@@ -7,6 +7,8 @@
   integer :: ei, ej, ek, si, sj, sk
 !==============================================================================!
 
+  call Cpu_Timer_Mod_Start('Mesh_Mod_Materials')
+
   do e = 0, n_elem-1
     if(elem(e) % mark .ne. OFF) then
       elem(e) % material = OFF
@@ -83,5 +85,7 @@
     end do
 
   end if  ! mater .eq. ON
+
+  call Cpu_Timer_Mod_Stop('Mesh_Mod_Materials')
 
   end subroutine
