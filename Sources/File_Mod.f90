@@ -28,6 +28,7 @@
   include 'File_Mod/Save_Mesh.f90'
   include 'File_Mod/Load_Domain.f90'
   include 'File_Mod/Get_Useful_Line.f90'
+  include 'File_Mod/Mesh_Statistics.f90'
 
   end module
 

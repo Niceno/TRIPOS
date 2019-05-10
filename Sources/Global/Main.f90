@@ -110,7 +110,7 @@
   call Mesh_Mod_Erase
   call Mesh_Mod_Classify
 
-  if(mes .eq. ON) print *, "Working.  Please wait !"
+  if(mes .eq. ON) print *, "Working.  Please wait!"
 
   if(del .eq. ON) then
     do while(ugly .ne. OFF)
@@ -142,7 +142,7 @@
   !   Improve mesh quality by relaxation and smooting   !
   !-----------------------------------------------------!
   if(rel .eq. ON .or. smo .eq. ON) then
-    if(mes .eq. ON) print *, "Improving the mesh quality.  Please wait !"
+    if(mes .eq. ON) print *, "Improving the mesh quality"
 
     if(rel .eq. ON)                  call Mesh_Mod_Relax
     if(rel .eq. ON .or. smo .eq. ON) call Mesh_Mod_Smooth
@@ -151,24 +151,26 @@
   !--------------------------------!
   !   Renumber all mesh entities   !
   !--------------------------------!
-  print *, "Renumerating nodes, elements and sides. Please wait !"
+  if(mes .eq. ON) print *, "Renumerating nodes, elements and sides"
   call Mesh_Mod_Renumber
 
   !----------------------------!
   !   Process material marks   !
   !----------------------------!
-  print *, "Processing material marks. Please wait !"
+  if(mes .eq. ON) print *, "Processing material marks"
   call Mesh_Mod_Materials
 
   !-----------------------------------------!
   !   Save mesh in native Easymesh format   !
   !-----------------------------------------!
+  if(mes .eq. ON) print *, "Saving the mesh"
   call File_Mod_Save_Mesh
 
   !--------------------------------!
   !   Plot fig file if requested   !
   !--------------------------------!
   if(fig .eq. ON) then
+    if(mes .eq. ON) print *, "Plotting the mesh in fig format"
     call File_Mod_Fig_Start
     call File_Mod_Fig_Draw
     call File_Mod_Fig_End
@@ -178,10 +180,16 @@
   !   Plot dxf file if requested   !
   !--------------------------------!
   if(dxf .eq. ON) then
+    if(mes .eq. ON) print *, "Plotting the mesh in dfx format"
     call File_Mod_Dxf_Start
     call File_Mod_Dxf_Draw
     call File_Mod_Dxf_End
   end if
+
+  if(mes .eq. ON) print *, "Done!"
+  if(mes .eq. ON) print *, ""
+
+  call File_Mod_Mesh_Statistics
 
   call Cpu_Timer_Mod_Stop('Easymesh_Main')
   call Cpu_Timer_Mod_Statistics()
