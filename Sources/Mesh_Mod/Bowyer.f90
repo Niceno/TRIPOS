@@ -22,7 +22,7 @@
           if(e .ne. OFF) then
             vor % x = elem(e) % xv
             vor % y = elem(e) % yv
-            if( Mesh_Mod_Dist(vor, node(n)) < elem(e) % r_out ) then
+            if( Mesh_Mod_Dist(vor, node(n)) < elem(e) % r_ex ) then
               call Mesh_Mod_Swap_Side(s)
               swap = 1
             end if
@@ -32,7 +32,7 @@
           if(e .ne. OFF) then
             vor % x = elem(e) % xv
             vor % y = elem(e) % yv
-            if( Mesh_Mod_Dist(vor, node(n)) < elem(e) % r_out ) then
+            if( Mesh_Mod_Dist(vor, node(n)) < elem(e) % r_ex ) then
               call Mesh_Mod_Swap_Side(s)
               swap = 1
             end if

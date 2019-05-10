@@ -1,24 +1,27 @@
 !==============================================================================!
   subroutine Mesh_Mod_Classify
 !*-----------------------------------------------------------------------------!
-!  This function searches through all elements every time.  Some optimisation  !
-!  would definitely bee needed.  But it also must me noted, that this function !
-!  defines the strategy for insertion of new nodes.                            !
+!  Find the ugliest element                                                    !
+!                                                                              !
+!  This function searches through all elements every time to find the ugliest. !
+!  Some optimisation should definitely bee attampted.  But it also must me     !
+!  noted, that this function defines the strategy for insertion of new nodes.  !
 !                                                                              !
 !  It's MUCH MUCH better when the ugliest element is found as one with         !
 !  highest ratio of R/r !!! (before it was element with greater R)             !
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer  :: e, ei, ej, ek, si, sj, sk
-  real(RP) :: ratio, f
+  integer       :: e, ei, ej, ek, si, sj, sk
+  real(RP)      :: max_ratio, f
+  logical, save :: done_boundary = .false.
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_Classify')
 
   ! Initialize variables
-  ratio = -GREAT
-  ugly  =  OFF
+  max_ratio = -GREAT
+  ugly      =  OFF
 
   !----------------------------------------------!
   !   Browse throuhg all elements to see which   !
@@ -41,7 +44,7 @@
         ! Version 1.5d introduced variable r_tol which 
         ! can be set by command line option.  Before,
         ! it was constant equal to 0.7
-        if(elem(e) % r_out < r_tol*f) elem(e) % state = DONE
+        if(elem(e) % r_ex < r_tol*f) elem(e) % state = DONE
 
         ! Even this is possible
         if(ei .ne. OFF .and.  &
@@ -66,32 +69,35 @@
   !   First part of the trick:                        !
   !     search through the elements on the boundary   !
   !---------------------------------------------------!
-  do e = 0, n_elem-1
-    if(elem(e) % mark .ne. OFF .and.  &
-       elem(e) % state .ne. DONE) then
-      si = elem(e) % si
-      sj = elem(e) % sj
-      sk = elem(e) % sk
+  if(.not. done_boundary) then
+    do e = 0, n_elem-1
+      if(elem(e) % mark .ne. OFF .and.  &
+         elem(e) % state .ne. DONE) then
+        si = elem(e) % si
+        sj = elem(e) % sj
+        sk = elem(e) % sk
 
-      if(side(si) % mark .ne. 0)  elem(e) % state = ACTIVE
-      if(side(sj) % mark .ne. 0)  elem(e) % state = ACTIVE
-      if(side(sk) % mark .ne. 0)  elem(e) % state = ACTIVE
+        if(side(si) % mark .ne. 0)  elem(e) % state = ACTIVE
+        if(side(sj) % mark .ne. 0)  elem(e) % state = ACTIVE
+        if(side(sk) % mark .ne. 0)  elem(e) % state = ACTIVE
 
-      if(elem(e) % state .eq. ACTIVE .and.  &
-         elem(e) % r_out/elem(e) % r_in > ratio) then
-        ratio = max(ratio,   elem(e) % r_out  &
-                           / elem(e) % r_in)
-        ugly  = e
+        if(elem(e) % state .eq. ACTIVE .and.  &
+           elem(e) % r_rat > max_ratio) then
+          max_ratio = max(max_ratio,   elem(e) % r_rat)
+          ugly  = e
+        end if
       end if
-    end if
-  end do
+    end do
+  end if
+
+  if(ugly .eq. OFF) done_boundary = .true.
 
   !----------------------------------------------------!
   !   Second part of the trick:                        !
   !     if non-acceptable element on the boundary is   !
   !     found, ignore the elements inside the domain   !
   !----------------------------------------------------!
-  if(ugly .eq. OFF) then
+  if(done_boundary) then
     do e = 0, n_elem-1
       if(elem(e) % mark .ne. OFF) then
         if(elem(e) % state .ne. DONE) then
@@ -118,9 +124,8 @@
           end if
 
           if(elem(e) % state .eq. ACTIVE .and.  &
-             elem(e) % r_out/elem(e) % r_in > ratio) then
-            ratio = max(ratio,   elem(e) % r_out  &
-                               / elem(e) % r_in)
+             elem(e) % r_rat > max_ratio) then
+            max_ratio = max(max_ratio,   elem(e) % r_rat)
             ugly = e
           end if
         end if

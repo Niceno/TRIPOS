@@ -15,14 +15,16 @@
   !   Element type   !
   !------------------!
   type Elem_Type
-    integer :: i,  j,  k   ! element's nodes
-    integer :: ei, ej, ek  ! element's neighbours
-    integer :: si, sj, sk  ! element's sides
-    integer :: mark        ! is it off (ON or OFF)
-    integer :: state       ! is it DONE, ACTIVE or WAITING
-    integer :: material    ! material marker
-    integer :: new_numb;   ! used for renumeration
-    real(RP) :: xv, yv, xin, yin, r_out, r_in, det;
+    integer  :: i,  j,  k    ! element's nodes
+    integer  :: ei, ej, ek   ! element's neighbours
+    integer  :: si, sj, sk   ! element's sides
+    integer  :: mark         ! is it off (ON or OFF)
+    integer  :: state        ! is it DONE, ACTIVE or WAITING
+    integer  :: material     ! material marker
+    integer  :: new_numb;    ! used for renumeration
+    real(RP) :: xv, yv       ! center of Voronoi polygon
+    real(RP) :: xin, yin     ! center of inscribed circle
+    real(RP) :: r_ex, r_in, r_rat
   end type
 
   !---------------!
