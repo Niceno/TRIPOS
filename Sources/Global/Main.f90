@@ -110,6 +110,10 @@
   call Mesh_Mod_Erase
   call Mesh_Mod_Classify
 
+  !-----------------------!
+  !   Main algorithm to   !
+  !    generate a mesh    !
+  !-----------------------!
   if(mes .eq. ON) print *, "Working.  Please wait!"
 
   if(del .eq. ON) then
