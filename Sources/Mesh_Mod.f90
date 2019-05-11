@@ -8,6 +8,7 @@
   implicit none
 !==============================================================================!
 
+  integer  :: num_from     ! one or zero, depends how is user numbering
   integer  :: ugly         ! does ugly have to be here?
   real(RP) :: r_tol = 0.7  ! adjusts level of aggresivity
 

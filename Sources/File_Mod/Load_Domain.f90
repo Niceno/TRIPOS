@@ -47,4 +47,19 @@
 
   close(FU)
 
+  !--------------------------------------!
+  !   Check how the input was numbered   !
+  !--------------------------------------!
+  num_from = MAX_NODES
+  do s = 0, n_segment-1
+    num_from = min(num_from, segment(s) % n0)
+    num_from = min(num_from, segment(s) % n1)
+  end do
+  if(num_from .eq. 1) then
+    do s = 0, n_segment-1
+      segment(s) % n0 = segment(s) % n0 - 1
+      segment(s) % n1 = segment(s) % n1 - 1
+    end do
+  end if
+
   end subroutine

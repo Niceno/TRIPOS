@@ -4,12 +4,16 @@
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
   integer                      :: e, s, n, r_n_node, r_n_side, r_n_elem
+  integer                      :: nf
   type(Node_Type), allocatable :: r_node(:)
   type(Elem_Type), allocatable :: r_elem(:)
   type(Side_Type), allocatable :: r_side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Save_Mesh')
+
+  ! Take alias of "num_from"; this is zero or one
+  nf = num_from
 
   ! Initialize renumbered numbers of nodes, sides and elements
   r_n_node = 0
@@ -44,7 +48,7 @@
   write(FU, *) r_n_node
   do n=0, r_n_node-1
     write(FU, "(i6, a1, 2es22.13e3, i4)")  &
-                       n, ":", r_node(n) % x, r_node(n) % y, r_node(n) % mark
+                     n+nf, ":", r_node(n) % x, r_node(n) % y, r_node(n) % mark
   end do
   write(FU, "(a)") "----------------------------------------------------------"
   write(FU, "(a)") "     n:  x                     y                      mark"
@@ -96,12 +100,12 @@
   ! Save
   write(FU, *) r_n_elem
   do e=0, r_n_elem-1
-    write(FU, "(i6, a1, 9i6, 2es22.13e3, i4)")                     &
-          e, ":", r_elem(e) % i,  r_elem(e) % j,  r_elem(e) % k,   &
-                  r_elem(e) % ei, r_elem(e) % ej, r_elem(e) % ek,  &
-                  r_elem(e) % si, r_elem(e) % sj, r_elem(e) % sk,  &
-                  r_elem(e) % xv, r_elem(e) % yv,                  &
-                  r_elem(e) % material
+    write(FU, "(i6, a1, 9i6, 2es22.13e3, i4)")                               &
+        e+nf, ":", r_elem(e) % i +nf, r_elem(e) % j +nf, r_elem(e) % k +nf,  &
+                   r_elem(e) % ei+nf, r_elem(e) % ej+nf, r_elem(e) % ek+nf,  &
+                   r_elem(e) % si+nf, r_elem(e) % sj+nf, r_elem(e) % sk+nf,  &
+                   r_elem(e) % xv, r_elem(e) % yv,                           &
+                   r_elem(e) % material
   end do
   write(FU, "(a)") "-----------------------------------------------------" // &
                    "-----------------------------------------------------" // &
@@ -149,9 +153,9 @@
   write(FU, *) r_n_side
   do s=0, r_n_side-1
     write(FU, "(i6, a1, 5i6)")                            &
-                 s, ":", r_side(s) % c,  r_side(s) % d,   &
-                         r_side(s) % ea, r_side(s) % eb,  &
-                         r_side(s) % mark
+                 s+nf, ":", r_side(s) % c+nf,  r_side(s) % d+nf,   &
+                            r_side(s) % ea+nf, r_side(s) % eb+nf,  &
+                            r_side(s) % mark
   end do
   write(FU, "(a)") "-------------------------------------"
   write(FU, "(a)") "     s:   c     d    ea    eb    mark"
