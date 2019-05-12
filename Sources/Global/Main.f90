@@ -104,6 +104,8 @@
   if(mes .eq. ON) call File_Mod_Logo
   call File_Mod_Load_Domain    ! load the domain file
 
+
+
   call Easymesh_Setup_Domain   ! set the domain up
   call Easymesh_Insert_Domain  ! insert points which define domain
 
@@ -193,9 +195,9 @@
   if(mes .eq. ON) print *, "Done!"
   if(mes .eq. ON) print *, ""
 
-  call File_Mod_Mesh_Statistics
+  if(mes .eq. ON) call File_Mod_Mesh_Statistics
 
-  call Cpu_Timer_Mod_Stop('Easymesh_Main')
-  call Cpu_Timer_Mod_Statistics()
+  if(mes .eq. ON) call Cpu_Timer_Mod_Stop('Easymesh_Main')
+  if(mes .eq. ON) call Cpu_Timer_Mod_Statistics()
 
   end program
