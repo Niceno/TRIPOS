@@ -6,6 +6,7 @@
   integer             :: s, ea, eb
   real(RP)            :: xc, yc, xd, yd, xa, ya, xb, yb
   real(RP), parameter :: zero = 0.0
+  character(len=CL)   :: bnd_layer
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Dxf_Draw')
@@ -19,7 +20,9 @@
       yc = node(side(s) % c) % y
       xd = node(side(s) % d) % x
       yd = node(side(s) % d) % y
-      call File_Mod_Dxf_Line(xc, yc, zero, xd, yd, zero, "boundary")
+      bnd_layer(1:11) = "boundary-00"
+      write(bnd_layer(10:11), "(i2.2)") side(s) % mark
+      call File_Mod_Dxf_Line(xc, yc, zero, xd, yd, zero, bnd_layer(1:11))
     end if
   end do
 
