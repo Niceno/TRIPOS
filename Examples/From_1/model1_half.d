@@ -22,9 +22,9 @@
 # Boundary segments 
 
   Boundary conditions are defined as following:
-  1: A = 0
-  2: A = 20
-  3: dA/dn = 0
+  1) A = 0      (boundary-01 in dxf)
+  2) A = 20a    (boundary-02 in dxf)
+  3) dA/dn = 0  (boundary-03 in dxf)
 #
 
 1:   1   2   3
