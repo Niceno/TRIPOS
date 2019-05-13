@@ -3,16 +3,21 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer           :: c_node, c_elem, c_side, n, e, s
-  integer           :: i, j, k, max_width
-  real(RP)          :: area, max_area, min_area, avg_area
-  real(RP)          :: max_r_rat, min_r_rat, avg_r_rat
-  character(len=CL) :: line
+  integer            :: c_node, c_elem, c_side, n, e, s
+  integer            :: i, j, k, max_width
+  real(RP)           :: area, max_area, min_area, avg_area
+  real(RP)           :: max_r_rat, min_r_rat, avg_r_rat
+  character(len=CL)  :: line
+  integer, parameter :: L = 11
 !==============================================================================!
 
-  print *, "#=======================================================#"
-  print *, "#                   Mesh statistics                     #"
-  print *, "#-------------------------------------------------------#"
+  line( 1:CL) = " "
+  line( 1+L:57+L) = "#=======================================================#"
+  print *, trim(line)
+  line( 1+L:57+L) = "#                   Mesh statistics                     #"
+  print *, trim(line)
+  line( 1+L:57+L) = "#-------------------------------------------------------#"
+  print *, trim(line)
 
   !------------------------!
   !   Number of entities   !
@@ -30,17 +35,19 @@
     if(side(s) % mark .ne. OFF) c_side = c_side + 1
   end do
 
-  line( 1:CL) = " ";  line(57:57) = "#"
-  write(line( 1:23), "(a)")  "# Number of nodes    : "
-  write(line(24:29), "(i6)") c_node
+  line( 1:CL) = " ";  
+  line(57+L:57+L) = "#"
+  write(line( 1+L:23+L), "(a)")  "# Number of nodes    : "
+  write(line(24+L:29+L), "(i6)") c_node
   print *, trim(line)
-  write(line( 1:23), "(a)")  "# Number of elements : "
-  write(line(24:29), "(i6)") c_elem
+  write(line( 1+L:23+L), "(a)")  "# Number of elements : "
+  write(line(24+L:29+L), "(i6)") c_elem
   print *, trim(line)
-  write(line( 1:23), "(a)")  "# Number of sides    : "
-  write(line(24:29), "(i6)") c_side
+  write(line( 1+L:23+L), "(a)")  "# Number of sides    : "
+  write(line(24+L:29+L), "(i6)") c_side
   print *, trim(line)
-  print *, "#-------------------------------------------------------#"
+  line( 1+L:57+L) = "#-------------------------------------------------------#"
+  print *, trim(line)
 
   !-------------------!
   !   Element areas   !
@@ -61,17 +68,19 @@
   end do
   avg_area = avg_area / n_elem
 
-  line( 1:CL) = " ";  line(57:57) = "#"
-  write(line( 1:26), "(a)")  "# Largest element area  : "
-  write(line(27:36), "(es10.4)") max_area
+  line( 1:CL) = " ";  
+  line(57+L:57+L) = "#"
+  write(line( 1+L:26+L), "(a)")  "# Largest element area  : "
+  write(line(27+L:36+L), "(es10.4)") max_area
   print *, trim(line)
-  write(line( 1:26), "(a)")  "# Smallest element area : "
-  write(line(27:36), "(es10.4)") min_area
+  write(line( 1+L:26+L), "(a)")  "# Smallest element area : "
+  write(line(27+L:36+L), "(es10.4)") min_area
   print *, trim(line)
-  write(line( 1:26), "(a)")  "# Average element area  : "
-  write(line(27:36), "(es10.4)") avg_area
+  write(line( 1+L:26+L), "(a)")  "# Average element area  : "
+  write(line(27+L:36+L), "(es10.4)") avg_area
   print *, trim(line)
-  print *, "#-------------------------------------------------------#"
+  line( 1+L:57+L) = "#-------------------------------------------------------#"
+  print *, trim(line)
 
   !--------------!
   !   Uglyness   !
@@ -88,17 +97,19 @@
   end do
   avg_r_rat = avg_r_rat / n_elem
 
-  line( 1:CL) = " ";  line(57:57) = "#"
-  write(line( 1:31), "(a)")  "# Maximum ex/in radius ratio : "
-  write(line(32:41), "(es10.4)") max_r_rat
+  line( 1:CL) = " ";  
+  line(57+L:57+L) = "#"
+  write(line( 1+L:31+L), "(a)")  "# Maximum ex/in radius ratio : "
+  write(line(32+L:41+L), "(es10.4)") max_r_rat
   print *, trim(line)
-  write(line( 1:31), "(a)")  "# Minimum ex/in radius ratio : "
-  write(line(32:41), "(es10.4)") min_r_rat
+  write(line( 1+L:31+L), "(a)")  "# Minimum ex/in radius ratio : "
+  write(line(32+L:41+L), "(es10.4)") min_r_rat
   print *, trim(line)
-  write(line( 1:31), "(a)")  "# Average ex/in radius ratio : "
-  write(line(32:41), "(es10.4)") avg_r_rat
+  write(line( 1+L:31+L), "(a)")  "# Average ex/in radius ratio : "
+  write(line(32+L:41+L), "(es10.4)") avg_r_rat
   print *, trim(line)
-  print *, "#-------------------------------------------------------#"
+  line( 1+L:57+L) = "#-------------------------------------------------------#"
+  print *, trim(line)
 
   !----------------------!
   !   Matrix bandwidth   !
@@ -118,11 +129,13 @@
     end if
   end do
 
-  line( 1:CL) = " ";  line(57:57) = "#"
-  write(line( 1:29), "(a)")  "# Maximum matrix bandwidth : "
-  write(line(30:33), "(i4)") max_width
+  line( 1:CL) = " ";  
+  line(57+L:57+L) = "#"
+  write(line( 1+L:29+L), "(a)")  "# Maximum matrix bandwidth : "
+  write(line(30+L:33+L), "(i4)") max_width
   print *, trim(line)
-  print *, "#=======================================================#"
+  line( 1+L:57+L) = "#-------------------------------------------------------#"
+  print *, trim(line)
   print *, ""
 
   end subroutine
