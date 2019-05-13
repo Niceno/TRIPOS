@@ -3,52 +3,72 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer           :: max_l, f
-  character(len= 4) :: max_l_s
-  real(RP)          :: total_time
-  character(len=CL) :: line
+  integer            :: f
+  real               :: total_time, t_temp
+  character(len=CL)  :: line, n_temp
+  integer, parameter :: I=11  ! indent
+  logical            :: swap
 !==============================================================================!
 
-  ! Find max function name length
-  max_l = 0
-  do f=1, n_funct
-    max_l = max(max_l, len_trim(funct_name(f)))
+  ! Perform bubble sort on times
+  do
+    swap = .false.
+    do f=1, n_funct-1
+      if(funct_time(f+1) > funct_time(f)) then
+        t_temp = funct_time(f)
+        n_temp = funct_name(f)
+        funct_time(f)   = funct_time(f+1)
+        funct_name(f)   = funct_name(f+1)
+        funct_time(f+1) = t_temp
+        funct_name(f+1) = n_temp
+        swap = .true.
+      end if
+    end do
+    if(.not. swap) goto 1
   end do
-  write(max_l_s, "(i4.4)"), max_l+4
-  max_l = 40
+1 continue
 
+  ! Estimate total time
   total_time = 0.0
   do f=1, n_funct
     total_time = total_time + funct_time(f)
   end do
 
-  print *, "#=======================================================#"
-  print *, "#                 CPU usage statistics                  #"
-  print *, "#-------------------------------------------------------#"
   line( 1:CL) = " "
-  line( 1:29) = "#             Total CPU time: "
-  write(line(30:39), "(f9.3)") total_time
-  line(40:42) = "[s]"
-  line(57:57) = "#"
+  line( 1+I:57+I) = "#=======================================================#"
   print *, trim(line)
-  print *, "#-------------------------------------------------------#"
-  print *, "# Function:                      Time:                  #"
-  print *, "#-------------------------------------------------------#"
+  line( 1+I:57+I) = "#                 CPU usage statistics                  #"
+  print *, trim(line)
+  line( 1+I:57+I) = "#-------------------------------------------------------#"
+  print *, trim(line)
+  line( 1:CL) = " "
+  line( 1+I:29+I) = "#             Total CPU time: "
+  write(line(30+I:39+I), "(f9.3)") total_time
+  line(40+I:42+I) = "[s]"
+  line(57+I:57+I) = "#"
+  print *, trim(line)
+  line( 1+I:57+I) = "#-------------------------------------------------------#"
+  print *, trim(line)
+  line( 1+I:57+I) = "# Function:                      Time:                  #"
+  print *, trim(line)
+  line( 1+I:57+I) = "#-------------------------------------------------------#"
+  print *, trim(line)
 
   do f=1, n_funct
     line( 1:CL) = " "
-    line( 1: 1) = "#"
-    line(57:57) = "#"
-    line( 3: 3+len_trim(funct_name(f))) = funct_name(f)
-    line(29:29) = ":"
-    write(line(31:38), "(f8.3)") funct_time(f)
-    line(40:42) = "[s]"
-    write(line(47:50), "(f4.1)") funct_time(f) / total_time * 100.0
-    line(52:52) = "%"
+    line( 1+I: 1+I) = "#"
+    line(57+I:57+I) = "#"
+    line( 3+I: 3+I+len_trim(funct_name(f))) = funct_name(f)
+    line(29+I:29+I) = ":"
+    write(line(31+I:38+I), "(f8.3)") funct_time(f)
+    line(40+I:42+I) = "[s]"
+    write(line(47+I:50+I), "(f4.1)") funct_time(f) / total_time * 100.0
+    line(52+I:52+I) = "%"
     print *, trim(line)
   end do
 
-  print *, "#=======================================================#"
+  line( 1+I:57+I) = "#-------------------------------------------------------#"
+  print *, trim(line)
   print *, ""
 
   end subroutine
