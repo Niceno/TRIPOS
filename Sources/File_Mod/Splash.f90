@@ -4,7 +4,7 @@
 !   Splashes the screen with command line options                              !
 !==============================================================================!
 
-  call File_Mod_Logo
+  call File_Mod_Logo  ! prints 12 lines
 
   print *, ""
   print *, "Usage:  EasyMesh  <name>  [<options>]"
@@ -19,6 +19,10 @@
   print *, "   +dxf      create drawing in DXF format"
   print *, "   +fig      create drawing in fig format"
   print *, "   +example  create example input file"
+
+  ! Page break
+  write(*, "(a)", advance = "no")  "Press ENTER to continue!";  read *
+
   print *, ""
   print *, "Note: After +a option, you should specify the agressivity"
   print *, "      level which is an integer value from 0 to 6. The more"
@@ -68,6 +72,11 @@
   print *, "  following Ne lines: <element:> <i> <j> <k> <ei> <ej> <ek> " // & 
                                      "<si> <sj> <sk> <xv> <yv> <marker> "
   print *, "  last two lines:     comments inserted by the program "
+  print *, ""
+
+  ! Page break
+  write(*, "(a)", advance = "no")  "Press ENTER to continue!";  read *
+
   print *, ""
   print *, "  where:"
   print *, "    n_elem      is the number of elements"

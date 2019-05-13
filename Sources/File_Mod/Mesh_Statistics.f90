@@ -8,7 +8,7 @@
   real(RP)           :: area, max_area, min_area, avg_area
   real(RP)           :: max_r_rat, min_r_rat, avg_r_rat
   character(len=CL)  :: line
-  integer, parameter :: L = 11
+  integer, parameter :: L = 10
 !==============================================================================!
 
   line( 1:CL) = " "
