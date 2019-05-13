@@ -25,6 +25,7 @@
     ! Store each segment's chain number
     segment(s) % chain = n_chain
 
+    ! If there are more than one chains, this will work
     if( segment(s) % n1 .ne. segment(s+1) % n0) then
       chain(n_chain) % s1 = s
       n_chain = n_chain + 1
@@ -32,6 +33,13 @@
     end if
 
   end do
+
+  ! If there is one chain only, the above will not work
+  if(n_chain .eq. 0) then
+    chain(n_chain) % s0 = 0
+    chain(n_chain) % s1 = n_segment-1
+    n_chain = 1
+  end if
 
   !-------------------------------------!
   !   Correct the spacing on segments   !
@@ -80,7 +88,6 @@
   !   Determine chain types   !
   !---------------------------!
   do n = 0, n_chain-1
-
     if( segment(chain(n) % s0) % n0 .eq. segment(chain(n) % s1) % n1 )  &
       chain(n) % type = CLOSED
 
