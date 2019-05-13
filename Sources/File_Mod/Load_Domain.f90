@@ -34,7 +34,7 @@
   read(line, *) n_segment
 
   ! Allocate memory for segments and chains
-  allocate(segment(0:n_segment+1))  ! why n_seg+1?
+  allocate(segment(0:n_segment+1))  ! n_seg+1 is accessed in Setup_Domain
   allocate(chain  (0:n_segment+1))  ! approximation
 
   do s = 0, n_segment-1
