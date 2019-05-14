@@ -4,7 +4,7 @@
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
   integer            :: f
-  real               :: total_time, t_temp
+  real(RP)           :: total_time, t_temp
   character(len=CL)  :: line, n_temp
   integer, parameter :: I=10  ! indent
   logical            :: swap
