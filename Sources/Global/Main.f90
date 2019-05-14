@@ -35,7 +35,7 @@
   !----------------------------------------------!
   if(command_argument_count() .eq. 0) then
     call File_Mod_Splash
-    return
+    stop
 
   !------------------------------------------------!
   !   Some command line arguments were specified   !
@@ -48,7 +48,7 @@
     ! ... and if so, create example file and beat it
     if(argv .eq. "+example") then
       call File_Mod_Example
-      return
+      stop
     end if
 
     ! First argument wasn't "+example", meaning it was domain file name
