@@ -1,10 +1,11 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Line(x1, y1, z1, x2, y2, z2, layer)
+  subroutine File_Mod_Dxf_Line(x1, y1, x2, y2, layer)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  real(RP)         :: x1, y1, z1, x2, y2, z2
-  character(len=*) :: layer
+  real(RP)            :: x1, y1, x2, y2
+  character(len=*)    :: layer
+  real(RP), parameter :: zero = 0.0
 !==============================================================================!
 
   write(FU, "(a)")        "0"
@@ -16,12 +17,12 @@
   write(FU, "(a)")        "20"
   write(FU, "(es15.5e3)") y1
   write(FU, "(a)")        "30"
-  write(FU, "(es15.5e3)") z1
+  write(FU, "(es15.5e3)") zero
   write(FU, "(a)")        "11"
   write(FU, "(es15.5e3)") x2
   write(FU, "(a)")        "21"
   write(FU, "(es15.5e3)") y2
   write(FU, "(a)")        "31"
-  write(FU, "(es15.5e3)") z2
+  write(FU, "(es15.5e3)") zero
 
   end subroutine

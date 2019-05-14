@@ -6,8 +6,9 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer             :: n, s, ea, eb
+  integer             :: e, n, s, ea, eb
   real(RP)            :: xc, yc, xd, yd, xa, ya, xb, yb
+  real(RP)            :: xi, yi, xj, yj, xk, yk
   real(RP)            :: xmax, xmin, ymax, ymin, scl
   real(RP), parameter :: zero = 0.0
 !==============================================================================!
@@ -29,6 +30,27 @@
   scl = min( 9000.0/(ymax-ymin+SMALL), 9000.0/(xmax-xmin+SMALL) )
 
   !-------------------!
+  !   Draw Elements   !
+  !-------------------!
+  do e = 0, n_elem-1
+    if(elem(e) % mark .ne. OFF) then  ! it means: side is in the domain */
+      xi = node(elem(e) % i) % x
+      yi = node(elem(e) % i) % y
+      xj = node(elem(e) % j) % x
+      yj = node(elem(e) % j) % y
+      xk = node(elem(e) % k) % x
+      yk = node(elem(e) % k) % y
+      call File_Mod_Fig_Solid(450+floor(scl*xi),  &
+                              450+floor(scl*yi),  &
+                              450+floor(scl*xj),  &
+                              450+floor(scl*yj),  &
+                              450+floor(scl*xk),  &
+                              450+floor(scl*yk),  &
+                              elem(e) % material)
+    end if
+  end do
+
+  !-------------------!
   !   Draw boundary   !
   !-------------------!
   do s = 0, n_side-1
@@ -41,7 +63,7 @@
                               450+floor(scl*yc),  &
                               450+floor(scl*xd),  &
                               450+floor(scl*yd),  &
-                              0, 3, 0, zero)
+                              0, 3, 0)
     end if
   end do
 
@@ -58,7 +80,7 @@
                              450+floor(scl*yc),  &
                              450+floor(scl*xd),  &
                              450+floor(scl*yd),  &
-                             0, 1, 1, zero);
+                             0, 1, 1)
     end if
   end do
 
@@ -90,7 +112,7 @@
                              450+floor(scl*ya),  &
                              450+floor(scl*xb),  &
                              450+floor(scl*yb),  &
-                             0, 1, 4, zero)
+                             0, 1, 4)
     end if
   end do
 

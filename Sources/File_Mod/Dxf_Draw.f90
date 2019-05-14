@@ -3,13 +3,30 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer             :: s, ea, eb
+  integer             :: e, s, ea, eb
   real(RP)            :: xc, yc, xd, yd, xa, ya, xb, yb
-  real(RP), parameter :: zero = 0.0
-  character(len=CL)   :: bnd_layer
+  real(RP)            :: xi, yi, xj, yj, xk, yk
+  character(len=CL)   :: bnd_layer, mat_layer
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Dxf_Draw')
+
+  !-------------------!
+  !   Draw Elements   !
+  !-------------------!
+  do e = 0, n_elem-1
+    if(elem(e) % mark .ne. OFF) then  ! it means: side is in the domain */
+      xi = node(elem(e) % i) % x
+      yi = node(elem(e) % i) % y
+      xj = node(elem(e) % j) % x
+      yj = node(elem(e) % j) % y
+      xk = node(elem(e) % k) % x
+      yk = node(elem(e) % k) % y
+      mat_layer(1:11) = "material-00"
+      write(mat_layer(10:11), "(i2.2)") elem(e) % material
+      call File_Mod_Dxf_Solid(xi, yi, xj, yj, xk, yk, mat_layer(1:11))
+    end if
+  end do
 
   !-------------------!
   !   Draw boundary   !
@@ -22,7 +39,7 @@
       yd = node(side(s) % d) % y
       bnd_layer(1:11) = "boundary-00"
       write(bnd_layer(10:11), "(i2.2)") side(s) % mark
-      call File_Mod_Dxf_Line(xc, yc, zero, xd, yd, zero, bnd_layer(1:11))
+      call File_Mod_Dxf_Line(xc, yc, xd, yd, bnd_layer(1:11))
     end if
   end do
 
@@ -35,7 +52,7 @@
       yc = node(side(s) % c) % y
       xd = node(side(s) % d) % x
       yd = node(side(s) % d) % y
-      call File_Mod_Dxf_Line(xc, yc, zero, xd, yd, zero, "delaunay")
+      call File_Mod_Dxf_Line(xc, yc, xd, yd, "delaunay")
     end if
   end do
 
@@ -63,7 +80,7 @@
         yb = 0.5*(node(side(s) % c) % y + node(side(s) % d) % y)
       end if
 
-      call File_Mod_Dxf_Line(xa, ya, zero, xb, yb, zero, "voronoi")
+      call File_Mod_Dxf_Line(xa, ya, xb, yb, "voronoi")
 
     end if
   end do
