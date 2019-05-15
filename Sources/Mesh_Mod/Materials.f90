@@ -84,6 +84,15 @@
 
     end do
 
+  !-----------------------------------------------------------!
+  !   Material markers are not specified, set them all to 1   !
+  !-----------------------------------------------------------!
+  else
+    do e = 0, n_elem-1
+      if(elem(e) % mark .ne. OFF) then
+        elem(e) % material = 1
+      end if
+    end do
   end if  ! mater .eq. ON
 
   call Cpu_Timer_Mod_Stop('Mesh_Mod_Materials')
