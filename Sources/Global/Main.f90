@@ -15,15 +15,16 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  character(len=CL) :: argv                          ! command line argument
+  character(len=CL) :: argv                 ! command line argument
   integer           :: arg, n_node_old
-  integer           :: del, rel, smo, dxf, fig, mes  ! control paramaters
+  integer           :: tri, rel, smo, mes   ! control paramaters
+  integer           :: dxf, fig, del, vor   ! more control parameters
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Easymesh_Main')
 
   ! Initialize control parameters
-  del = ON   ! perform Delaunay triangulization
+  tri = ON   ! perform Delaunay triangulization
   rel = ON   ! perform relaxation
   smo = ON   ! perform smoothing
   dxf = OFF  ! don't create DXF file
@@ -85,12 +86,25 @@
         if(argv .eq. "6")  r_tol = 1.0
       end if
       if(argv .eq. "-d") then          ! don't triangulate the domain
-        del =OFF
+        tri =OFF
         rel =OFF
         smo =OFF
       end if
       if(argv .eq. "+dxf") dxf = ON    ! create dxf
       if(argv .eq. "+fig") fig = ON    ! create fig
+      if(argv .eq. "+dxf" .or. argv .eq. "+fig") then
+        call get_command_argument(arg+1, argv)
+        if(argv .eq. "D") then
+          del = ON
+          vor = OFF
+        else if(argv .eq. "V") then
+          del = OFF
+          vor = ON
+        else
+          del = ON
+          vor = ON
+        end if
+      end if
       if(argv .eq. "-r")   rel = OFF   ! no relaxation
       if(argv .eq. "-s")   smo = OFF   ! no smoothing
       if(argv .eq. "-m")   mes = OFF   ! no messages
@@ -116,7 +130,7 @@
   !-----------------------!
   if(mes .eq. ON) print *, "Working.  Please wait!"
 
-  if(del .eq. ON) then
+  if(tri .eq. ON) then
     do while(ugly .ne. OFF)
       n_node_old = n_node
       call Mesh_Mod_New_Node
@@ -176,7 +190,7 @@
   if(fig .eq. ON) then
     if(mes .eq. ON) print *, "Plotting the mesh in fig format"
     call File_Mod_Fig_Start
-    call File_Mod_Fig_Draw
+    call File_Mod_Fig_Draw(del, vor)
     call File_Mod_Fig_End
   end if
 
@@ -186,7 +200,7 @@
   if(dxf .eq. ON) then
     if(mes .eq. ON) print *, "Plotting the mesh in dfx format"
     call File_Mod_Dxf_Start
-    call File_Mod_Dxf_Draw
+    call File_Mod_Dxf_Draw(del, vor)
     call File_Mod_Dxf_End
   end if
 
