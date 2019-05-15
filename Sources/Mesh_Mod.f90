@@ -1,7 +1,7 @@
 !==============================================================================!
   module Mesh_Mod
 !----------------------------------[Modules]-----------------------------------!
-  use Const_Mod,     only: RP, MAX_NODES, ON, OFF, GREAT, CLOSED,  &
+  use Const_Mod,     only: RP, MAX_NODES, ON, OFF, GREAT, OPEN, CLOSED,  &
                            ACTIVE, WAITING, DONE
   use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
@@ -36,7 +36,7 @@
     integer :: mark       ! is it off?
     integer :: next       ! next node in the boundary chain
     integer :: chain      ! to which chains the node belongs
-    integer :: inserted
+    integer :: inserted   ! how many times has it been inserted?
     integer :: new_numb   ! used for renumeration
     real(RP) :: x, y, f
     real(RP) :: sumx, sumy
@@ -103,5 +103,6 @@
   include 'Mesh_Mod/Swap_Side.f90'
   include 'Mesh_Mod/Neighbours.f90'
   include 'Mesh_Mod/Insert_Node.f90'
+  include 'Mesh_Mod/Insert_Chains.f90'
 
   end module

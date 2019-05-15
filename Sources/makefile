@@ -34,8 +34,7 @@ SRC_MOD += Const_Mod.f90	\
            File_Mod.f90
 
 
-SRC_FUN = Setup_Domain.f90	\
-          Insert_Domain.f90	\
+SRC_FUN = Setup_Chains.f90	\
           Main.f90
 
 #--------------------------------------------------------

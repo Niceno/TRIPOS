@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Easymesh_Setup_Domain
+  subroutine Easymesh_Setup_Chains
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod
   use Mesh_Mod

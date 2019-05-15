@@ -117,10 +117,9 @@
   !-----------------------------------------!
   if(mes .eq. ON) call File_Mod_Logo
   call File_Mod_Load_Domain    ! load the domain file
+  call Easymesh_Setup_Chains   ! set the domain up
 
-  call Easymesh_Setup_Domain   ! set the domain up
-  call Easymesh_Insert_Domain  ! insert points which define domain
-
+  call Mesh_Mod_Insert_Chains  ! insert points which define domain
   call Mesh_Mod_Erase
   call Mesh_Mod_Classify
 
