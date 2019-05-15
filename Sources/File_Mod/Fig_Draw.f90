@@ -1,10 +1,12 @@
 !==============================================================================!
-  subroutine File_Mod_Fig_Draw
+  subroutine File_Mod_Fig_Draw(delaunay, voronoi)
 !------------------------------------------------------------------------------!
 !   Let's say that drawing area is 20 x 20 cm. One cm in xfig is 450 poins.    !
 !   It means that drawing area is 9000 x 9000 points.                          !
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  integer :: delaunay, voronoi
 !-----------------------------------[Locals]-----------------------------------!
   integer             :: e, n, s, ea, eb
   real(RP)            :: xc, yc, xd, yd, xa, ya, xb, yb
@@ -70,51 +72,55 @@
   !-------------------!
   !   Draw Delaunay   !
   !-------------------!
-  do s = 0, n_side-1
-    if(side(s) % mark==0) then  ! it means: side is in the domain */
-      xc = node(side(s) % c) % x
-      yc = node(side(s) % c) % y
-      xd = node(side(s) % d) % x
-      yd = node(side(s) % d) % y
-      call File_Mod_Fig_Line(450+floor(scl*xc),  &
-                             450+floor(scl*yc),  &
-                             450+floor(scl*xd),  &
-                             450+floor(scl*yd),  &
-                             0, 1, 1)
-    end if
-  end do
+  if(delaunay .eq. ON) then
+    do s = 0, n_side-1
+      if(side(s) % mark==0) then  ! it means: side is in the domain */
+        xc = node(side(s) % c) % x
+        yc = node(side(s) % c) % y
+        xd = node(side(s) % d) % x
+        yd = node(side(s) % d) % y
+        call File_Mod_Fig_Line(450+floor(scl*xc),  &
+                               450+floor(scl*yc),  &
+                               450+floor(scl*xd),  &
+                               450+floor(scl*yd),  &
+                               0, 1, 1)
+      end if
+    end do
+  end if
 
   !------------------!
   !   Draw Voronoi   !
   !------------------!
-  do s = 0, n_side-1
-    if(side(s) % mark .ne. OFF) then
+  if(voronoi .eq. ON) then
+    do s = 0, n_side-1
+      if(side(s) % mark .ne. OFF) then
 
-      ea = side(s) % ea
-      if(ea .ne. OFF) then
-        xa = elem(ea) % xv
-        ya = elem(ea) % yv
-      else
-        xa = 0.5 * (node(side(s) % c) % x + node(side(s) % d) % x)
-        ya = 0.5 * (node(side(s) % c) % y + node(side(s) % d) % y)
+        ea = side(s) % ea
+        if(ea .ne. OFF) then
+          xa = elem(ea) % xv
+          ya = elem(ea) % yv
+        else
+          xa = 0.5 * (node(side(s) % c) % x + node(side(s) % d) % x)
+          ya = 0.5 * (node(side(s) % c) % y + node(side(s) % d) % y)
+        end if
+
+        eb = side(s) % eb
+        if(eb .ne. OFF) then
+          xb = elem(eb) % xv
+          yb = elem(eb) % yv
+        else
+          xb = 0.5*(node(side(s) % c) % x + node(side(s) % d) % x)
+          yb = 0.5*(node(side(s) % c) % y + node(side(s) % d) % y)
+        end if
+
+        call File_Mod_Fig_Line(450+floor(scl*xa),  &
+                               450+floor(scl*ya),  &
+                               450+floor(scl*xb),  &
+                               450+floor(scl*yb),  &
+                               0, 1, 4)
       end if
-
-      eb = side(s) % eb
-      if(eb .ne. OFF) then
-        xb = elem(eb) % xv
-        yb = elem(eb) % yv
-      else
-        xb = 0.5*(node(side(s) % c) % x + node(side(s) % d) % x)
-        yb = 0.5*(node(side(s) % c) % y + node(side(s) % d) % y)
-      end if
-
-      call File_Mod_Fig_Line(450+floor(scl*xa),  &
-                             450+floor(scl*ya),  &
-                             450+floor(scl*xb),  &
-                             450+floor(scl*yb),  &
-                             0, 1, 4)
-    end if
-  end do
+    end do
+  end if
 
   call Cpu_Timer_Mod_Stop('File_Mod_Fig_Draw')
 
