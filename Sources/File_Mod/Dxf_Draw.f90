@@ -26,9 +26,7 @@
       yk = node(elem(e) % k) % y
       mat_layer(1:11) = "material-00"
       write(mat_layer(10:11), "(i2.2)") elem(e) % material
-      if(elem(e) % material .gt. 0) then
-        call File_Mod_Dxf_Solid(xi, yi, xj, yj, xk, yk, mat_layer(1:11))
-      end if
+      call File_Mod_Dxf_Solid(xi, yi, xj, yj, xk, yk, mat_layer(1:11))
     end if
   end do
 
