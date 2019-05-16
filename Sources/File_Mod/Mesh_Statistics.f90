@@ -3,7 +3,7 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer            :: c_node, c_elem, c_side, n, e, s
+  integer            :: e
   integer            :: i, j, k, max_width
   real(RP)           :: area, max_area, min_area, avg_area
   real(RP)           :: max_r_rat, min_r_rat, avg_r_rat
@@ -22,29 +22,16 @@
   !------------------------!
   !   Number of entities   !
   !------------------------!
-  c_node = 0
-  c_elem = 0
-  c_side = 0
-  do n = 0, n_node-1
-    if(node(n) % mark .ne. OFF) c_node = c_node + 1
-  end do
-  do e = 0, n_elem-1
-    if(elem(e) % mark .ne. OFF) c_elem = c_elem + 1
-  end do
-  do s = 0, n_side-1
-    if(side(s) % mark .ne. OFF) c_side = c_side + 1
-  end do
-
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
   write(line( 1+L:23+L), "(a)")  "# Number of nodes    : "
-  write(line(24+L:29+L), "(i6)") c_node
+  write(line(24+L:29+L), "(i6)") n_node
   print *, trim(line)
   write(line( 1+L:23+L), "(a)")  "# Number of elements : "
-  write(line(24+L:29+L), "(i6)") c_elem
+  write(line(24+L:29+L), "(i6)") n_elem
   print *, trim(line)
   write(line( 1+L:23+L), "(a)")  "# Number of sides    : "
-  write(line(24+L:29+L), "(i6)") c_side
+  write(line(24+L:29+L), "(i6)") n_side
   print *, trim(line)
   line( 1+L:57+L) = "#-------------------------------------------------------#"
   print *, trim(line)
@@ -120,9 +107,6 @@
       i = elem(e) % i
       j = elem(e) % j
       k = elem(e) % k
-      i = node(i) % new_numb
-      j = node(j) % new_numb
-      k = node(k) % new_numb
       max_width = max(max_width, abs(i-j))
       max_width = max(max_width, abs(j-k))
       max_width = max(max_width, abs(k-i))
