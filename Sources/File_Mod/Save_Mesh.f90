@@ -3,11 +3,8 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  integer                      :: e, s, n, r_n_node, r_n_side, r_n_elem
+  integer                      :: e, s, n
   integer                      :: nf
-  type(Node_Type), allocatable :: r_node(:)
-  type(Elem_Type), allocatable :: r_elem(:)
-  type(Side_Type), allocatable :: r_side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Save_Mesh')
@@ -15,97 +12,44 @@
   ! Take alias of "num_from"; this is zero or one
   nf = num_from
 
-  ! Initialize renumbered numbers of nodes, sides and elements
-  r_n_node = 0
-  r_n_side = 0
-  r_n_elem = 0
   len = len_trim(name)
 
-  ! Allocate memory for local structures
-  allocate(r_node(0:n_node-1))
-  allocate(r_elem(0:n_elem-1))
-  allocate(r_side(0:n_side-1))
-
-  !---------------------------------!
-  !   Renumber and save node data   !
-  !---------------------------------!
-
-  ! Renumber
-  do n=0, n_node-1
-    if(node(n) % mark .ne. OFF .and. node(n) % new_numb .ne. OFF) then
-      r_n_node = r_n_node + 1
-      r_node(node(n) % new_numb) % x    = node(n) % x
-      r_node(node(n) % new_numb) % y    = node(n) % y
-      r_node(node(n) % new_numb) % mark = node(n) % mark
-    end if
-  end do
+  !---------------!
+  !   Node data   !
+  !---------------!
 
   ! Form file name and open it
   name(len:len) = "n"
   open(unit=FU, file=name)
 
   ! Save
-  write(FU, *) r_n_node
-  do n=0, r_n_node-1
+  write(FU, *) n_node
+  do n=0, n_node-1
     write(FU, "(i6, a1, 2es22.13e3, i4)")  &
-                     n+nf, ":", r_node(n) % x, r_node(n) % y, r_node(n) % mark
+                     n+nf, ":", node(n) % x, node(n) % y, node(n) % mark
   end do
   write(FU, "(a)") "----------------------------------------------------------"
   write(FU, "(a)") "     n:  x                     y                      mark"
 
   close(FU)
 
-  !------------------------------------!
-  !   Renumber and save element data   !
-  !------------------------------------!
-
-  ! Renumber
-  do e=0, n_elem-1
-    if(elem(e) % mark .ne. OFF .and. elem(e) % new_numb .ne. OFF) then
-      r_n_elem = r_n_elem + 1
-      r_elem(elem(e) % new_numb) % i  = node(elem(e) % i) % new_numb
-      r_elem(elem(e) % new_numb) % j  = node(elem(e) % j) % new_numb
-      r_elem(elem(e) % new_numb) % k  = node(elem(e) % k) % new_numb
-      r_elem(elem(e) % new_numb) % si = side(elem(e) % si) % new_numb
-      r_elem(elem(e) % new_numb) % sj = side(elem(e) % sj) % new_numb
-      r_elem(elem(e) % new_numb) % sk = side(elem(e) % sk) % new_numb
-      r_elem(elem(e) % new_numb) % xv = elem(e) % xv;
-      r_elem(elem(e) % new_numb) % yv = elem(e) % yv;
-      r_elem(elem(e) % new_numb) % material = elem(e) % material
-
-      if(elem(e) % ei .ne. OFF) then
-        r_elem(elem(e) % new_numb) % ei = elem(elem(e) % ei) % new_numb
-      else
-        r_elem(elem(e) % new_numb) % ei = OFF;
-      end if
-
-      if(elem(e) % ej .ne. OFF) then
-        r_elem(elem(e) % new_numb) % ej = elem(elem(e) % ej) % new_numb
-      else
-        r_elem(elem(e) % new_numb) % ej = OFF;
-      end if
-
-      if(elem(e) % ek .ne. OFF) then
-        r_elem(elem(e) % new_numb) % ek = elem(elem(e) % ek) % new_numb
-      else
-        r_elem(elem(e) % new_numb) % ek = OFF;
-      end if
-    end if
-  end do
+  !------------------!
+  !   Element data   !
+  !------------------!
 
   ! Form file name and open it
   name(len:len) = "e"
   open(unit=FU, file=name)
 
   ! Save
-  write(FU, *) r_n_elem
-  do e=0, r_n_elem-1
-    write(FU, "(i6, a1, 9i6, 2es22.13e3, i4)")                               &
-        e+nf, ":", r_elem(e) % i +nf, r_elem(e) % j +nf, r_elem(e) % k +nf,  &
-                   r_elem(e) % ei+nf, r_elem(e) % ej+nf, r_elem(e) % ek+nf,  &
-                   r_elem(e) % si+nf, r_elem(e) % sj+nf, r_elem(e) % sk+nf,  &
-                   r_elem(e) % xv, r_elem(e) % yv,                           &
-                   r_elem(e) % material
+  write(FU, *) n_elem
+  do e=0, n_elem-1
+    write(FU, "(i6, a1, 9i6, 2es22.13e3, i4)")                         &
+        e+nf, ":", elem(e) % i +nf, elem(e) % j +nf, elem(e) % k +nf,  &
+                   elem(e) % ei+nf, elem(e) % ej+nf, elem(e) % ek+nf,  &
+                   elem(e) % si+nf, elem(e) % sj+nf, elem(e) % sk+nf,  &
+                   elem(e) % xv,    elem(e) % yv,                      &
+                   elem(e) % material
   end do
   write(FU, "(a)") "-----------------------------------------------------" // &
                    "-----------------------------------------------------" // &
@@ -115,47 +59,21 @@
                    "     xv,                   yv,                    sign"
   close(FU)
 
-  !---------------------------------!
-  !   Renumber and save side data   !
-  !---------------------------------!
-
-  ! Renumber
-  do s=0, n_side-1
-    if(side(s) % mark .ne. OFF .and. side(s) % new_numb .ne. OFF) then
-      r_n_side = r_n_side + 1
-      r_side(side(s) % new_numb) % c    = node(side(s) % c) % new_numb
-      r_side(side(s) % new_numb) % d    = node(side(s) % d) % new_numb
-      r_side(side(s) % new_numb) % mark = side(s) % mark;
-
-      if(side(s) % a .ne. OFF) then
-        r_side(side(s) % new_numb) % a  = node(side(s) % a) % new_numb
-        r_side(side(s) % new_numb) % ea = elem(side(s) % ea) % new_numb
-      else
-        r_side(side(s) % new_numb) % a  = OFF
-        r_side(side(s) % new_numb) % ea = OFF
-      end if
-
-      if(side(s) % b .ne. OFF) then
-        r_side(side(s) % new_numb) % b  = node(side(s) % b) % new_numb
-        r_side(side(s) % new_numb) % eb = elem(side(s) % eb) % new_numb
-      else
-        r_side(side(s) % new_numb) % b  = OFF
-        r_side(side(s) % new_numb) % eb = OFF
-      end if
-    end if
-  end do
+  !---------------!
+  !   Side data   !
+  !---------------!
 
   ! Form file name and open it
   name(len:len) = "s"
   open(unit=FU, file=name)
 
   ! Save
-  write(FU, *) r_n_side
-  do s=0, r_n_side-1
+  write(FU, *) n_side
+  do s=0, n_side-1
     write(FU, "(i6, a1, 5i6)")                            &
-                 s+nf, ":", r_side(s) % c+nf,  r_side(s) % d+nf,   &
-                            r_side(s) % ea+nf, r_side(s) % eb+nf,  &
-                            r_side(s) % mark
+                 s+nf, ":", side(s) % c+nf,  side(s) % d+nf,   &
+                            side(s) % ea+nf, side(s) % eb+nf,  &
+                            side(s) % mark
   end do
   write(FU, "(a)") "-------------------------------------"
   write(FU, "(a)") "     s:   c     d    ea    eb    mark"

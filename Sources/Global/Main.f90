@@ -170,6 +170,7 @@
   !--------------------------------!
   if(mes .eq. ON) print *, "Renumerating nodes, elements and sides"
   call Mesh_Mod_Renumber
+  call Mesh_Mod_Compress
 
   !----------------------------!
   !   Process material marks   !

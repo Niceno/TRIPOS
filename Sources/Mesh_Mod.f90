@@ -97,6 +97,7 @@
   include 'Mesh_Mod/In_Elem.f90'
   include 'Mesh_Mod/Spacing.f90'
   include 'Mesh_Mod/Classify.f90'
+  include 'Mesh_Mod/Compress.f90'
   include 'Mesh_Mod/New_Node.f90'
   include 'Mesh_Mod/Renumber.f90'
   include 'Mesh_Mod/Materials.f90'
