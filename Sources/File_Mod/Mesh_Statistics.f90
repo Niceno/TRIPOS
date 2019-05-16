@@ -1,15 +1,29 @@
 !==============================================================================!
-  subroutine File_Mod_Mesh_Statistics
+  subroutine File_Mod_Mesh_Statistics(mesh)
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer            :: e
-  integer            :: i, j, k, max_width
-  real(RP)           :: area, max_area, min_area, avg_area
-  real(RP)           :: max_r_rat, min_r_rat, avg_r_rat
-  character(len=CL)  :: line
-  integer, parameter :: L = 10
+  integer                  :: e
+  integer                  :: i, j, k, max_width
+  real(RP)                 :: area, max_area, min_area, avg_area
+  real(RP)                 :: max_r_rat, min_r_rat, avg_r_rat
+  character(len=CL)        :: line
+  integer, parameter       :: L = 10
+  integer,         pointer :: nn, ne, ns
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
+
+  ! Take aliases
+  nn   => mesh % n_node
+  ne   => mesh % n_elem
+  ns   => mesh % n_side
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
 
   line( 1:CL) = " "
   line( 1+L:57+L) = "#=======================================================#"
@@ -25,13 +39,13 @@
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
   write(line( 1+L:23+L), "(a)")  "# Number of nodes    : "
-  write(line(24+L:29+L), "(i6)") n_node
+  write(line(24+L:29+L), "(i6)") nn
   print *, trim(line)
   write(line( 1+L:23+L), "(a)")  "# Number of elements : "
-  write(line(24+L:29+L), "(i6)") n_elem
+  write(line(24+L:29+L), "(i6)") ne
   print *, trim(line)
   write(line( 1+L:23+L), "(a)")  "# Number of sides    : "
-  write(line(24+L:29+L), "(i6)") n_side
+  write(line(24+L:29+L), "(i6)") ns
   print *, trim(line)
   line( 1+L:57+L) = "#-------------------------------------------------------#"
   print *, trim(line)
@@ -42,7 +56,7 @@
   avg_area =  0.0
   max_area = -GREAT
   min_area = +GREAT
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then
       i = elem(e) % i
       j = elem(e) % j
@@ -53,7 +67,7 @@
       avg_area = avg_area + area
     end if
   end do
-  avg_area = avg_area / n_elem
+  avg_area = avg_area / ne
 
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
@@ -75,14 +89,14 @@
   max_r_rat = -GREAT
   min_r_rat = +GREAT
   avg_r_rat =  0.0
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then
       max_r_rat = max(max_r_rat, elem(e) % r_rat)
       min_r_rat = min(min_r_rat, elem(e) % r_rat)
       avg_r_rat = avg_r_rat + elem(e) % r_rat
     end if
   end do
-  avg_r_rat = avg_r_rat / n_elem
+  avg_r_rat = avg_r_rat / ne
 
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
@@ -102,7 +116,7 @@
   !   Matrix bandwidth   !
   !----------------------!
   max_width = 0
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then
       i = elem(e) % i
       j = elem(e) % j

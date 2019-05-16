@@ -1,17 +1,27 @@
 !==============================================================================!
-  subroutine Mesh_Mod_New_Node
+  subroutine Mesh_Mod_New_Node(mesh)
 !------------------------------------------------------------------------------+
 !   This function is very important since it determines the position of the    !
 !   newly inserted node.                                                       !
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer         :: s, n
-  real(RP)        :: xm, ym, p, q, qx, qy, rhom, rho_m, d
-  type(Node_Type) :: ca
+  integer                  :: s, n
+  real(RP)                 :: xm, ym, p, q, qx, qy, rhom, rho_m, d
+  type(Node_Type)          :: ca
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_New_Node')
+
+  ! Take aliases
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
 
   s = OFF
 
@@ -109,7 +119,8 @@
      * Mesh_Mod_Area(node(side(s) % c),  &
                      node(side(s) % d),  &
                      node(n)) .gt. 0.0 ) then
-    call Mesh_Mod_Insert_Node(xm + d*qx/q,  &
+    call Mesh_Mod_Insert_Node(mesh,         &
+                              xm + d*qx/q,  &
                               ym + d*qy/q,  &
                               ON,           &
                               OFF,          &

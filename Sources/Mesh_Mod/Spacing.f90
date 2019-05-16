@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Spacing(e, n)
+  subroutine Mesh_Mod_Spacing(mesh, e, n)
 !------------------------------------------------------------------------------+
 !   This function calculates the value of the spacing function in a new node   !
 !   'n' which is inserted in element 'e' by a linear approximation from the    !
@@ -7,10 +7,17 @@
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  integer :: e, n
+  type(Mesh_Type), target :: mesh
+  integer                 :: e, n
 !-----------------------------------[Locals]-----------------------------------!
-  real(RP) :: dxji, dxki, dyji, dyki, dx_i, dy_i, det, a, b
+  real(RP)                 :: dxji, dxki, dyji, dyki, dx_i, dy_i, det, a, b
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
 !==============================================================================!
+
+  ! Take aliases
+  node => mesh % node
+  elem => mesh % elem
 
   dxji = node(elem(e) % j) % x - node(elem(e) % i) % x
   dyji = node(elem(e) % j) % y - node(elem(e) % i) % y

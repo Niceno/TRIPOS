@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Diamond
+  subroutine Mesh_Mod_Diamond(mesh)
 !------------------------------------------------------------------------------!
 !   Diamond was originally supposed to speed up the mesh generation, but it    !
 !   actually slows down the execution by some 10% or so.  I am not sure if     !
@@ -7,13 +7,23 @@
 !   tractable quality measures.
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer :: ea, eb, eac, ead, ebc, ebd, s
+  integer                  :: ea, eb, eac, ead, ebc, ebd, s
+  integer,         pointer :: ns
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_Diamond')
 
-  do s = 0, n_side-1
+  ! Take aliases
+  ns   => mesh % n_side
+  elem => mesh % elem
+  side => mesh % side
+
+  do s = 0, ns-1
 
     if(side(s) % mark .ne. OFF) then
       ea = side(s) % ea;

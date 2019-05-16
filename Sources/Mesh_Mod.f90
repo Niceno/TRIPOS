@@ -75,14 +75,16 @@
   !   Mesh is a composition of all   !
   !    those types defined above     !
   !----------------------------------!
-  integer                      :: n_elem, n_node, n_side
-  integer                      :: n_point, n_chain, n_segment
-  type(Elem_Type)              :: elem(0:MAX_NODES*2)
-  type(Node_Type)              :: node(0:MAX_NODES)
-  type(Node_Type)              :: point(0:MAX_NODES/2)
-  type(Side_Type)              :: side(0:MAX_NODES*3)
-  type(Segm_Type), allocatable :: segment(:)
-  type(Chai_Type), allocatable :: chain(:)
+  type Mesh_Type
+    integer         :: n_elem, n_node, n_side
+    integer         :: n_point, n_chain, n_segment
+    type(Elem_Type) :: elem(0:MAX_NODES*2)
+    type(Node_Type) :: node(0:MAX_NODES)
+    type(Node_Type) :: point(0:MAX_NODES/2)
+    type(Side_Type) :: side(0:MAX_NODES*3)
+    type(Segm_Type) :: segment(0:MAX_NODES/16)
+    type(Chai_Type) :: chain(0:MAX_NODES/16)
+  end type
 
   contains
 

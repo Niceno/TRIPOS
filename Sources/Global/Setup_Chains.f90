@@ -1,50 +1,63 @@
 !==============================================================================!
-  subroutine Easymesh_Setup_Chains
+  subroutine Easymesh_Setup_Chains(mesh)
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod
   use Mesh_Mod
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
   integer  :: n, s
   real(RP) :: xo, xn, yo, yn, l, dlm
+  integer,         pointer :: nc, ns
+  type(Node_Type), pointer :: point(:)
+  type(Chai_Type), pointer :: chain(:)
+  type(Segm_Type), pointer :: segment(:)
 !==============================================================================!
+
+  ! Take aliases
+  nc      => mesh % n_chain
+  ns      => mesh % n_segment
+  chain   => mesh % chain
+  point   => mesh % point
+  segment => mesh % segment
 
   !----------------------!
   !   Count the chains   !
   !----------------------!
-  n_chain = 0
-  chain(n_chain) % s0 = 0
+  nc = 0
+  chain(nc) % s0 = 0
 
-  do s = 0, n_segment-1
+  do s = 0, ns-1
 
     ! Increase the inserted count for points
     point(segment(s) % n0) % inserted = point(segment(s) % n0) % inserted + 1
     point(segment(s) % n1) % inserted = point(segment(s) % n1) % inserted + 1
 
     ! Store each segment's chain number
-    segment(s) % chain = n_chain
+    segment(s) % chain = nc
 
     ! If there are more than one chains, this will work
     if( segment(s) % n1 .ne. segment(s+1) % n0) then
-      chain(n_chain) % s1 = s
-      n_chain = n_chain + 1
-      chain(n_chain) % s0 = s + 1
+      chain(nc) % s1 = s
+      nc = nc + 1
+      chain(nc) % s0 = s + 1
     end if
 
   end do
 
   ! If there is one chain only, the above will not work
-  if(n_chain .eq. 0) then
-    chain(n_chain) % s0 = 0
-    chain(n_chain) % s1 = n_segment-1
-    n_chain = 1
+  if(nc .eq. 0) then
+    chain(nc) % s0 = 0
+    chain(nc) % s1 = ns-1
+    nc = 1
   end if
 
   !-------------------------------------!
   !   Correct the spacing on segments   !
   !-------------------------------------!
-  do s = 0, n_segment-1
+  do s = 0, ns-1
 
     xo = point(segment(s) % n0) % x;  yo = point(segment(s) % n0) % y
     xn = point(segment(s) % n1) % x;  yn = point(segment(s) % n1) % y
@@ -65,7 +78,7 @@
   !----------------------------------!
   !   Count nodes on each segments   !
   !----------------------------------!
-  do s = 0, n_segment-1
+  do s = 0, ns-1
 
     xo = point(segment(s) % n0) % x;  yo = point(segment(s) % n0) % y
     xn = point(segment(s) % n1) % x;  yn = point(segment(s) % n1) % y
@@ -87,7 +100,7 @@
   !---------------------------!
   !   Determine chain types   !
   !---------------------------!
-  do n = 0, n_chain-1
+  do n = 0, nc-1
     if( segment(chain(n) % s0) % n0 .eq. segment(chain(n) % s1) % n1 )  &
       chain(n) % type = CLOSED
 

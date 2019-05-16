@@ -1,22 +1,37 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Renumber
+  subroutine Mesh_Mod_Renumber(mesh)
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer :: n, s, e, c, d, i, j, k;
-  integer :: new_elem, new_node, new_side, next_e, next_s, lowest
+  integer                  :: n, s, e, c, d, i, j, k;
+  integer                  :: new_elem, new_node, new_side
+  integer                  :: next_e, next_s, lowest
+  integer,         pointer :: nn, ne, ns
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_Renumber')
 
+  ! Take aliases
+  nn   => mesh % n_node
+  ne   => mesh % n_elem
+  ns   => mesh % n_side
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
+
   ! Initialize new_numbs
-  do n = 0, n_node-1
+  do n = 0, nn-1
     node(n) % new_numb = OFF
   end do
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     elem(e) % new_numb = OFF
   end do
-  do s = 0, n_side-1
+  do s = 0, ns-1
     side(s) % new_numb = OFF
   end do
 
@@ -25,7 +40,7 @@
   new_side = 0
 
   ! Search for the first element which is ON
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) goto 1
   end do
 1 continue
@@ -38,10 +53,10 @@
   !   Renumeration of nodes   !
   !---------------------------!
   do
-    lowest = n_node * 2
+    lowest = nn * 2
     next_e = OFF
 
-    do e = 0, n_elem-1
+    do e = 0, ne-1
       if(elem(e) % mark .ne. OFF .and. elem(e) % new_numb .eq. OFF) then
         i = node(elem(e) % i) % new_numb
         j = node(elem(e) % j) % new_numb
@@ -89,10 +104,10 @@
   !   Renumeration of elements   !
   !------------------------------!
   do
-    lowest = n_node * 3
+    lowest = nn * 3
     next_e = OFF;
 
-    do e = 0, n_elem-1
+    do e = 0, ne-1
       if(elem(e) % mark .ne. OFF .and. elem(e) % new_numb .eq. OFF) then
         i = node(elem(e) % i) % new_numb
         j = node(elem(e) % j) % new_numb
@@ -117,10 +132,10 @@
   !   Renumeration of sides   !
   !---------------------------!
   do
-    lowest = n_node * 2
+    lowest = nn * 2
     next_s = OFF
 
-    do s = 0, n_side-1
+    do s = 0, ns-1
       if(side(s) % mark .ne. OFF .and. side(s) % new_numb .eq. OFF) then
         c = node(side(s) % c) % new_numb
         d = node(side(s) % d) % new_numb

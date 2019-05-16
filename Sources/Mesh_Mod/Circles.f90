@@ -1,16 +1,26 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Circles(e)
+  subroutine Mesh_Mod_Circles(mesh, e)
 !*-----------------------------------------------------------------------------!
 !   This function calculates radii of inscribed and circumscribed circle       !
 !   for a given element (int e)                                                !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  integer :: e
+  type(Mesh_Type), target :: mesh
+  integer                 :: e
 !-----------------------------------[Locals]-----------------------------------!
-  real(RP) :: x, y, xi, yi, xj, yj, xk, yk, xij, yij, xjk, yjk, num, den, det
-  real(RP) :: si, sj, sk, o
+  real(RP)                 :: x, y, xi, yi, xj, yj, xk, yk
+  real(RP)                 :: xij, yij, xjk, yjk, num, den, det
+  real(RP)                 :: si, sj, sk, o
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
+
+  ! Take aliases
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
 
   xi = node(elem(e) % i) % x;  yi = node(elem(e) % i) % y
   xj = node(elem(e) % j) % x;  yj = node(elem(e) % j) % y

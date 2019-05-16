@@ -1,27 +1,40 @@
 !==============================================================================!
-  subroutine File_Mod_Fig_Draw(delaunay, voronoi)
+  subroutine File_Mod_Fig_Draw(mesh, delaunay, voronoi)
 !------------------------------------------------------------------------------!
 !   Let's say that drawing area is 20 x 20 cm. One cm in xfig is 450 poins.    !
 !   It means that drawing area is 9000 x 9000 points.                          !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  integer :: delaunay, voronoi
+  type(Mesh_Type), target :: mesh
+  integer                 :: delaunay, voronoi
 !-----------------------------------[Locals]-----------------------------------!
-  integer             :: e, n, s, ea, eb
-  real(RP)            :: xc, yc, xd, yd, xa, ya, xb, yb
-  real(RP)            :: xi, yi, xj, yj, xk, yk
-  real(RP)            :: xmax, xmin, ymax, ymin, scl
-  real(RP), parameter :: zero = 0.0
+  integer                  :: e, n, s, ea, eb
+  real(RP)                 :: xc, yc, xd, yd, xa, ya, xb, yb
+  real(RP)                 :: xi, yi, xj, yj, xk, yk
+  real(RP)                 :: xmax, xmin, ymax, ymin, scl
+  real(RP), parameter      :: zero = 0.0
+  integer,         pointer :: nn, ne, ns
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Fig_Draw')
+
+  ! Take aliases
+  nn   => mesh % n_node
+  ne   => mesh % n_elem
+  ns   => mesh % n_side
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
 
   xmax = -GREAT
   xmin = +GREAT
   ymax = -GREAT
   ymin = +GREAT
-  do n = 0, n_node-1
+  do n = 0, nn-1
     if(node(n) % mark .ne. OFF) then
       xmin = min(xmin, node(n) % x)
       ymin = min(ymin, node(n) % y)
@@ -34,7 +47,7 @@
   !-------------------!
   !   Draw Elements   !
   !-------------------!
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then  ! it means: side is in the domain */
       xi = node(elem(e) % i) % x
       yi = node(elem(e) % i) % y
@@ -55,7 +68,7 @@
   !-------------------!
   !   Draw boundary   !
   !-------------------!
-  do s = 0, n_side-1
+  do s = 0, ns-1
     if(side(s) % mark>0) then  ! it means, side is on the boundary */
       xc = node(side(s) % c) % x
       yc = node(side(s) % c) % y
@@ -73,7 +86,7 @@
   !   Draw Delaunay   !
   !-------------------!
   if(delaunay .eq. ON) then
-    do s = 0, n_side-1
+    do s = 0, ns-1
       if(side(s) % mark==0) then  ! it means: side is in the domain */
         xc = node(side(s) % c) % x
         yc = node(side(s) % c) % y
@@ -92,7 +105,7 @@
   !   Draw Voronoi   !
   !------------------!
   if(voronoi .eq. ON) then
-    do s = 0, n_side-1
+    do s = 0, ns-1
       if(side(s) % mark .ne. OFF) then
 
         ea = side(s) % ea

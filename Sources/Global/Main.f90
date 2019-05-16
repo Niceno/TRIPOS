@@ -19,6 +19,7 @@
   integer           :: arg, n_node_old
   integer           :: tri, rel, smo, mes   ! control paramaters
   integer           :: dxf, fig, del, vor   ! more control parameters
+  type(Mesh_Type)   :: mesh
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Easymesh_Main')
@@ -116,12 +117,12 @@
   !     normal operation can now start      !
   !-----------------------------------------!
   if(mes .eq. ON) call File_Mod_Logo
-  call File_Mod_Load_Domain    ! load the domain file
-  call Easymesh_Setup_Chains   ! set the domain up
+  call File_Mod_Load_Domain(mesh)   ! load the domain file
+  call Easymesh_Setup_Chains(mesh)  ! set the domain up
 
-  call Mesh_Mod_Insert_Chains  ! insert points which define domain
-  call Mesh_Mod_Erase
-  call Mesh_Mod_Classify
+  call Mesh_Mod_Insert_Chains(mesh)  ! insert points which define domain
+  call Mesh_Mod_Erase(mesh)
+  call Mesh_Mod_Classify(mesh)
 
   !-----------------------!
   !   Main algorithm to   !
@@ -131,15 +132,15 @@
 
   if(tri .eq. ON) then
     do while(ugly .ne. OFF)
-      n_node_old = n_node
-      call Mesh_Mod_New_Node
-      call Mesh_Mod_Classify
+      n_node_old = mesh % n_node
+      call Mesh_Mod_New_Node(mesh)
+      call Mesh_Mod_Classify(mesh)
 
       if(mes .eq. ON .and.  &
-         mod(n_node, 500) .eq. 0) print "(i6,a)", n_node, " nodes"
+         mod(mesh % n_node, 500) .eq. 0) print "(i6,a)", mesh % n_node, " nodes"
 
       ! Exit because maximum number of nodes has been reached
-      if(n_node .eq. MAX_NODES-1) then
+      if(mesh % n_node .eq. MAX_NODES-1) then
         if(mes .eq. on) then
           print "(a,i6,a)", " Maximum number of nodes (",  &
                             MAX_NODES, ") has been reached." 
@@ -149,11 +150,11 @@
       end if
 
       ! No new nodes added to domain, exit the loop
-      if(n_node .eq. n_node_old) exit
+      if(mesh % n_node .eq. n_node_old) exit
     end do
   end if
 
-  call Mesh_Mod_Neighbours
+  call Mesh_Mod_Neighbours(mesh)
 
   !-----------------------------------------------------!
   !   Improve mesh quality by relaxation and smooting   !
@@ -161,36 +162,36 @@
   if(rel .eq. ON .or. smo .eq. ON) then
     if(mes .eq. ON) print *, "Improving the mesh quality"
 
-    if(rel .eq. ON)                  call Mesh_Mod_Relax
-    if(rel .eq. ON .or. smo .eq. ON) call Mesh_Mod_Smooth
+    if(rel .eq. ON)                  call Mesh_Mod_Relax(mesh)
+    if(rel .eq. ON .or. smo .eq. ON) call Mesh_Mod_Smooth(mesh)
   end if
 
   !--------------------------------!
   !   Renumber all mesh entities   !
   !--------------------------------!
   if(mes .eq. ON) print *, "Renumerating nodes, elements and sides"
-  call Mesh_Mod_Renumber
-  call Mesh_Mod_Compress
+  call Mesh_Mod_Renumber(mesh)
+  call Mesh_Mod_Compress(mesh)
 
   !----------------------------!
   !   Process material marks   !
   !----------------------------!
   if(mes .eq. ON) print *, "Processing material marks"
-  call Mesh_Mod_Materials
+  call Mesh_Mod_Materials(mesh)
 
   !-----------------------------------------!
   !   Save mesh in native Easymesh format   !
   !-----------------------------------------!
   if(mes .eq. ON) print *, "Saving the mesh"
-  call File_Mod_Save_Mesh
+  call File_Mod_Save_Mesh(mesh)
 
   !--------------------------------!
   !   Plot fig file if requested   !
   !--------------------------------!
   if(fig .eq. ON) then
     if(mes .eq. ON) print *, "Plotting the mesh in fig format"
-    call File_Mod_Fig_Start
-    call File_Mod_Fig_Draw(del, vor)
+    call File_Mod_Fig_Start(mesh)
+    call File_Mod_Fig_Draw(mesh, del, vor)
     call File_Mod_Fig_End
   end if
 
@@ -199,15 +200,15 @@
   !--------------------------------!
   if(dxf .eq. ON) then
     if(mes .eq. ON) print *, "Plotting the mesh in dfx format"
-    call File_Mod_Dxf_Start
-    call File_Mod_Dxf_Draw(del, vor)
+    call File_Mod_Dxf_Start(mesh)
+    call File_Mod_Dxf_Draw(mesh, del, vor)
     call File_Mod_Dxf_End
   end if
 
   if(mes .eq. ON) print *, "Done!"
   if(mes .eq. ON) print *, ""
 
-  if(mes .eq. ON) call File_Mod_Mesh_Statistics
+  if(mes .eq. ON) call File_Mod_Mesh_Statistics(mesh)
 
   if(mes .eq. ON) call Cpu_Timer_Mod_Stop('Easymesh_Main')
   if(mes .eq. ON) call Cpu_Timer_Mod_Statistics()

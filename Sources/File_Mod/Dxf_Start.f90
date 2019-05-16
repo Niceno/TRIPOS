@@ -1,20 +1,32 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Start
+  subroutine File_Mod_Dxf_Start(mesh)
 !------------------------------------------------------------------------------!
 !   Subroutine to start a .dxf file.                                           !
 !   Note: DXF color codes are described here: http://gohtx.com/acadcolors.php  !
 !------------------------------------------------------------------------------!
+  implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer           :: e, l, s
-  integer           :: max_bnd, max_mat
-  character(len=CL) :: bnd_layer, mat_layer
+  integer                  :: e, l, s
+  integer                  :: max_bnd, max_mat
+  character(len=CL)        :: bnd_layer, mat_layer
+  integer,         pointer :: ne, ns
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
+
+  ! Take aliases
+  ne   => mesh % n_elem
+  ns   => mesh % n_side
+  elem => mesh % elem
+  side => mesh % side
 
   !-------------------------------!
   !   Count boundary conditions   !
   !-------------------------------!
   max_bnd  = 0
-  do s = 0, n_side-1
+  do s = 0, ns-1
     max_bnd = max(max_bnd, side(s) % mark)
   end do
 
@@ -22,7 +34,7 @@
   !   Count materials   !
   !---------------------!
   max_mat = 0
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     max_mat = max(max_mat, elem(e) % material)
   end do
 

@@ -1,15 +1,28 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Materials
+  subroutine Mesh_Mod_Materials(mesh)
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer :: e, c, mater, over
-  integer :: ei, ej, ek, si, sj, sk
+  integer                  :: e, c, mater, over
+  integer                  :: ei, ej, ek, si, sj, sk
+  integer,         pointer :: ne, np
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
+  type(Node_Type), pointer :: point(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_Materials')
 
-  do e = 0, n_elem-1
+  ! Take aliases
+  ne    => mesh % n_elem
+  np    => mesh % n_point
+  elem  => mesh % elem
+  side  => mesh % side
+  point => mesh % point
+
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then
       elem(e) % material = OFF
     end if
@@ -24,11 +37,11 @@
   !   Browse throuhg all points, and pick those which have not been   !
   !   inserted, meaning which do not belong to boundary chains        !
   !-------------------------------------------------------------------!
-  do c = 0, n_point-1
+  do c = 0, np-1
    if(point(c) % inserted .eq. 0) then  ! =--> this is BAD, ghost number
 
      ! Store material marker ...
-     elem(Mesh_Mod_In_Elem(point(c))) % material = point(c) % mark
+     elem(Mesh_Mod_In_Elem(mesh, point(c))) % material = point(c) % mark
 
      ! ... and tell program that material markers are specified
      mater = ON
@@ -43,7 +56,7 @@
     do
       over = ON
 
-      do e = 0, n_elem-1
+      do e = 0, ne-1
         if(elem(e) % mark .ne. OFF .and. elem(e) % material .eq. OFF) then
           ei = elem(e) % ei
           ej = elem(e) % ej
@@ -88,7 +101,7 @@
   !   Material markers are not specified, set them all to 1   !
   !-----------------------------------------------------------!
   else
-    do e = 0, n_elem-1
+    do e = 0, ne-1
       if(elem(e) % mark .ne. OFF) then
         elem(e) % material = 1
       end if

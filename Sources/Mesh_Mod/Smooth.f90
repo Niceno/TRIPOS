@@ -1,15 +1,29 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Smooth
+  subroutine Mesh_Mod_Smooth(mesh)
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer :: it, s, n, e
+  integer                  :: it, s, n, e
+  integer,         pointer :: nn, ne, ns
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_Smooth')
 
+  ! Take aliases
+  nn   => mesh % n_node
+  ne   => mesh % n_elem
+  ns   => mesh % n_side
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
+
   do it = 0, 9
-    do s = 0, n_side-1
+    do s = 0, ns-1
       if(side(s) % mark .eq. 0) then
         if(node(side(s) % c) % mark .eq. 0) then
           node(side(s) % c) % sumx =  &
@@ -27,7 +41,7 @@
       end if
     end do
 
-    do n = 0, n_node-1
+    do n = 0, nn-1
       if(node(n) % mark .eq. 0) then
         node(n) % x = node(n) % sumx / node(n) % nne;  node(n) % sumx = 0.0
         node(n) % y = node(n) % sumy / node(n) % nne;  node(n) % sumy = 0.0
@@ -35,9 +49,9 @@
     end do
   end do
 
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then
-      call Mesh_Mod_Circles(e)
+      call Mesh_Mod_Circles(mesh, e)
     end if
   end do
 

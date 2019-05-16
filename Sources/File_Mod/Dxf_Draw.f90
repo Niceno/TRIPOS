@@ -1,22 +1,34 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Draw(delaunay, voronoi)
+  subroutine File_Mod_Dxf_Draw(mesh, delaunay, voronoi)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  integer :: delaunay, voronoi
+  type(Mesh_Type), target :: mesh
+  integer                 :: delaunay, voronoi
 !-----------------------------------[Locals]-----------------------------------!
-  integer             :: e, s, ea, eb
-  real(RP)            :: xc, yc, xd, yd, xa, ya, xb, yb
-  real(RP)            :: xi, yi, xj, yj, xk, yk
-  character(len=CL)   :: bnd_layer, mat_layer
+  integer                  :: e, s, ea, eb
+  real(RP)                 :: xc, yc, xd, yd, xa, ya, xb, yb
+  real(RP)                 :: xi, yi, xj, yj, xk, yk
+  character(len=CL)        :: bnd_layer, mat_layer
+  integer,         pointer :: ne, ns
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Dxf_Draw')
 
+  ! Take aliases
+  ne   => mesh % n_elem
+  ns   => mesh % n_side
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
+
   !-------------------!
   !   Draw Elements   !
   !-------------------!
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then  ! it means: side is in the domain */
       xi = node(elem(e) % i) % x
       yi = node(elem(e) % i) % y
@@ -33,7 +45,7 @@
   !-------------------!
   !   Draw boundary   !
   !-------------------!
-  do s = 0, n_side-1
+  do s = 0, ns-1
     if(side(s) % mark .gt. 0) then  ! it means, side is on the boundary */
       xc = node(side(s) % c) % x
       yc = node(side(s) % c) % y
@@ -49,7 +61,7 @@
   !   Draw Delaunay   !
   !-------------------!
   if(delaunay .eq. ON) then
-    do s = 0, n_side-1
+    do s = 0, ns-1
       if(side(s) % mark .eq. 0) then  ! it means: side is in the domain */
         xc = node(side(s) % c) % x
         yc = node(side(s) % c) % y
@@ -64,7 +76,7 @@
   !   Draw Voronoi   !
   !------------------!
   if(voronoi .eq. ON) then
-    do s = 0, n_side-1
+    do s = 0, ns-1
       if(side(s) % mark .ne. OFF) then
 
         ea = side(s) % ea

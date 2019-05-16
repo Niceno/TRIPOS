@@ -1,12 +1,22 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Neighbours
+  subroutine Mesh_Mod_Neighbours(mesh)
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer :: s
+  integer                  :: s
+  integer,         pointer :: ns
+  type(Node_Type), pointer :: node(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
-  do s = 0, n_side-1
+  ! Take aliases
+  ns   => mesh % n_side
+  node => mesh % node
+  side => mesh % side
+
+  do s = 0, ns-1
 
     if(side(s) % mark .eq. 0) then
 

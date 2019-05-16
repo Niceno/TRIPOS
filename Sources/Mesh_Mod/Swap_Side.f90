@@ -1,16 +1,27 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Swap_Side(s)
+  subroutine Mesh_Mod_Swap_Side(mesh, s)
 !*-----------------------------------------------------------------------------!
 !  This function calculates radii of inscribed and circumscribed circle        !
 !  for a given element (int e)                                                 !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  integer :: s
+  type(Mesh_Type), target :: mesh
+  integer                 :: s
 !-----------------------------------[Locals]-----------------------------------!
-  integer  :: a, b, c, d, ea, eb, eac, ead, ebc, ebd, sad, sac, sbc, sbd
-  real(RP) :: sx, sy
+  integer                  :: a, b, c, d, ea, eb
+  integer                  :: eac, ead, ebc, ebd
+  integer                  :: sad, sac, sbc, sbd
+  real(RP)                 :: sx, sy
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
+
+  ! Take aliases
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
 
   ea = side(s) % ea
   eb = side(s) % eb
@@ -118,7 +129,7 @@
     side(sbd) % b  = a
   end if
 
-  call Mesh_Mod_Circles(ea)
-  call Mesh_Mod_Circles(eb)
+  call Mesh_Mod_Circles(mesh, ea)
+  call Mesh_Mod_Circles(mesh, eb)
 
   end subroutine

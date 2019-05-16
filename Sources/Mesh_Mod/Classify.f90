@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Classify
+  subroutine Mesh_Mod_Classify(mesh)
 !*-----------------------------------------------------------------------------!
 !  Find the ugliest element                                                    !
 !                                                                              !
@@ -11,13 +11,25 @@
 !  highest ratio of R/r !!! (before it was element with greater R)             !
 !------------------------------------------------------------------------------!
   implicit none
+!---------------------------------[Arguments]----------------------------------!
+  type(Mesh_Type), target :: mesh
 !-----------------------------------[Locals]-----------------------------------!
-  integer       :: e, ei, ej, ek, si, sj, sk
-  real(RP)      :: max_ratio, f
-  logical, save :: done_boundary = .false.
+  integer                  :: e, ei, ej, ek, si, sj, sk
+  real(RP)                 :: max_ratio, f
+  logical, save            :: done_boundary = .false.
+  integer,         pointer :: ne
+  type(Node_Type), pointer :: node(:)
+  type(Elem_Type), pointer :: elem(:)
+  type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Mesh_Mod_Classify')
+
+  ! Take aliases
+  ne   => mesh % n_elem
+  node => mesh % node
+  elem => mesh % elem
+  side => mesh % side
 
   ! Initialize variables
   max_ratio = -GREAT
@@ -27,7 +39,7 @@
   !   Browse throuhg all elements to see which   !
   !      are e waiting and which are done        !
   !----------------------------------------------!
-  do e = 0, n_elem-1
+  do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then
       if(elem(e) % state .ne. DONE) then
         ei = elem(e) % ei
@@ -65,14 +77,14 @@
   !-----------------------------------------!
   !   Diamond check. Is it so important ?   !
   !-----------------------------------------!
-  call Mesh_Mod_Diamond
+  call Mesh_Mod_Diamond(mesh)
 
   !---------------------------------------------------!
   !   First part of the trick:                        !
   !     search through the elements on the boundary   !
   !---------------------------------------------------!
   if(.not. done_boundary) then
-    do e = 0, n_elem-1
+    do e = 0, ne-1
       if(elem(e) % mark .ne. OFF .and.  &
          elem(e) % state .ne. DONE) then
         si = elem(e) % si
@@ -100,7 +112,7 @@
   !     found, ignore the elements inside the domain   !
   !----------------------------------------------------!
   if(done_boundary) then
-    do e = 0, n_elem-1
+    do e = 0, ne-1
       if(elem(e) % mark .ne. OFF) then
         if(elem(e) % state .ne. DONE) then
           ei = elem(e) % ei
