@@ -2,6 +2,7 @@
   subroutine File_Mod_Dxf_Start
 !------------------------------------------------------------------------------!
 !   Subroutine to start a .dxf file.                                           !
+!   Note: DXF color codes are described here: http://gohtx.com/acadcolors.php  !
 !------------------------------------------------------------------------------!
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: e, l, s
@@ -55,7 +56,8 @@
     write(FU, "(a)") "70"                      ! flags
     write(FU, "(a)") "64"                      ! 64 means it is referenced later
     write(FU, "(a)") "62"                      ! color definition
-    write(FU, "(i2)") max(max_bnd,max_mat) + l
+    if(l .eq. 1) write(FU, "(a)") "5"          ! layer name
+    if(l .eq. 2) write(FU, "(a)") "6"          ! layer name
     write(FU, "(a)") "6"                       ! line type (educated guess)
     write(FU, "(a)") "CONTINUOUS"              ! line is continuous
   end do
@@ -71,7 +73,7 @@
     write(FU, "(a)") "70"                    ! flags
     write(FU, "(a)") "64"                    ! 64 means it is referenced later
     write(FU, "(a)") "62"                    ! color definition
-    write(FU, "(i2)") l                      ! color
+    write(FU, "(i4)") l*20 + 101             ! color
     write(FU, "(a)") "6"                     ! line type (educated guess)
     write(FU, "(a)") "CONTINUOUS"            ! line is continuous
   end do
@@ -87,7 +89,7 @@
     write(FU, "(a)") "70"                    ! flags
     write(FU, "(a)") "64"                    ! 64 means it is referenced later
     write(FU, "(a)") "62"                    ! color definition
-    write(FU, "(i2)") l                      ! color
+    write(FU, "(i4)") l*20                   ! color
     write(FU, "(a)") "6"                     ! line type (educated guess)
     write(FU, "(a)") "CONTINUOUS"            ! line is continuous
   end do
