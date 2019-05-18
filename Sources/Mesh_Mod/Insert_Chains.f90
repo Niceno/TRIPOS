@@ -63,18 +63,18 @@
 
   ! First three elements
   ne = 1
-  elem(0) % i =0;  elem(0) % j = 1; elem(0) % k = 2
-  elem(0) % ei=-1; elem(0) % ej=-1; elem(0) % ek=-1
-  elem(0) % si= 1; elem(0) % sj= 2; elem(0) % sk= 0
+  elem(0) % i   =0;  elem(0) % j =  1;  elem(0) % k =  2
+  elem(0) % ei=OFF;  elem(0) % ej=OFF;  elem(0) % ek=OFF
+  elem(0) % si=  1;  elem(0) % sj=  2;  elem(0) % sk=  0
 
   ! First three sides
   ns = 3
-  side(0) % c = 0;  side(0) % d = 1;  side(0) % a = 2;  side(0) % b =-1
-  side(1) % c = 1;  side(1) % d = 2;  side(1) % a = 0;  side(1) % b =-1
-  side(2) % c = 0;  side(2) % d = 2;  side(2) % a =-1;  side(2) % b = 1
-  side(0) % ea = 0;  side(0) % eb =-1
-  side(1) % ea = 0;  side(1) % eb =-1
-  side(2) % ea =-1;  side(2) % eb = 0
+  side(0) % c = 0;  side(0) % d = 1;  side(0) % a = 2;  side(0) % b = OFF
+  side(1) % c = 1;  side(1) % d = 2;  side(1) % a = 0;  side(1) % b = OFF
+  side(2) % c = 2;  side(2) % d = 0;  side(2) % a = 1;  side(2) % b = OFF
+  side(0) % ea = 0;  side(0) % eb = OFF
+  side(1) % ea = 0;  side(1) % eb = OFF
+  side(2) % ea = 0;  side(2) % eb = OFF
 
   ! Initialize new numbers
   do n = 0, np-1
