@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine File_Mod_Fig_Draw(mesh, delaunay, voronoi)
+  subroutine File_Mod_Fig_Draw_Mesh(mesh, delaunay, voronoi)
 !------------------------------------------------------------------------------!
 !   Let's say that drawing area is 20 x 20 cm. One cm in xfig is 450 poins.    !
 !   It means that drawing area is 9000 x 9000 points.                          !
@@ -20,7 +20,7 @@
   type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
-  call Cpu_Timer_Mod_Start('File_Mod_Fig_Draw')
+  call Cpu_Timer_Mod_Start('File_Mod_Fig_Draw_Mesh')
 
   ! Take aliases
   nn   => mesh % n_node
@@ -135,6 +135,6 @@
     end do
   end if
 
-  call Cpu_Timer_Mod_Stop('File_Mod_Fig_Draw')
+  call Cpu_Timer_Mod_Stop('File_Mod_Fig_Draw_Mesh')
 
   end subroutine

@@ -62,8 +62,8 @@
     line(29+I:29+I) = ":"
     write(line(31+I:38+I), "(f8.3)") funct_time(f)
     line(40+I:42+I) = "[s]"
-    write(line(47+I:50+I), "(f4.1)") funct_time(f) / total_time * 100.0
-    line(52+I:52+I) = "%"
+    write(line(45+I:51+I), "(f6.3)") funct_time(f) / total_time * 100.0
+    line(53+I:53+I) = "%"
     print *, trim(line)
   end do
 

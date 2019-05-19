@@ -73,6 +73,17 @@
     end if
   end do
 
+  ! Correct negative ea
+  do s = 3, ns-1
+    if(side(s) % mark .ne. OFF) then
+      if(side(s) % ea .eq. OFF) then
+        call Swap_Int(side(s) % a,  side(s) % b)
+        call Swap_Int(side(s) % c,  side(s) % d)
+        call Swap_Int(side(s) % ea, side(s) % eb)
+      end if
+    end if
+  end do
+
   !--------------------------!
   !   Elimination of nodes   !
   !--------------------------!

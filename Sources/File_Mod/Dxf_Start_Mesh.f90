@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Start(mesh)
+  subroutine File_Mod_Dxf_Start_Mesh(mesh, comm)
 !------------------------------------------------------------------------------!
 !   Subroutine to start a .dxf file.                                           !
 !   Note: DXF color codes are described here: http://gohtx.com/acadcolors.php  !
@@ -7,10 +7,12 @@
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Mesh_Type), target :: mesh
+  type(Comm_Type)         :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, l, s
-  integer                  :: max_bnd, max_mat
+  integer                  :: max_bnd, max_mat, len
   character(len=CL)        :: bnd_layer, mat_layer
+  character(len=CL)        :: dxf_mesh_name = ""
   integer,         pointer :: ne, ns
   type(Elem_Type), pointer :: elem(:)
   type(Side_Type), pointer :: side(:)
@@ -38,7 +40,13 @@
     max_mat = max(max_mat, elem(e) % material)
   end do
 
-  open(unit=FU, file=dxf_name)
+  ! Form file name ...
+  len = len_trim(comm % problem_name)
+  dxf_mesh_name(    1:len-2) = comm % problem_name(1:len-2)
+  dxf_mesh_name(len-1:len+2) = ".dxf"
+
+  ! ... and open it
+  open(unit=FU, file=dxf_mesh_name)
 
   !-------------------!
   !   Define layers   !

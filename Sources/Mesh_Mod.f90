@@ -1,5 +1,6 @@
 !==============================================================================!
   module Mesh_Mod
+!------------------------------------------------------------------------------!
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod,     only: RP, MAX_NODES, ON, OFF, GREAT, OPEN, CLOSED,  &
                            ACTIVE, WAITING, DONE
@@ -8,9 +9,8 @@
   implicit none
 !==============================================================================!
 
-  integer  :: num_from     ! one or zero, depends how is user numbering
-  integer  :: ugly         ! does ugly have to be here?
-  real(RP) :: r_tol = 0.7  ! adjusts level of aggresivity
+  integer :: num_from     ! one or zero, depends how is user numbering
+  integer :: ugly         ! does ugly have to be here?
 
   !------------------!
   !   Element type   !
@@ -26,6 +26,7 @@
     real(RP) :: xv, yv       ! center of Voronoi polygon
     real(RP) :: xin, yin     ! center of inscribed circle
     real(RP) :: r_ex, r_in, r_rat
+    real(RP) :: area_i, area_j, area_k
   end type
 
   !---------------!
@@ -46,10 +47,10 @@
   !   Side type   !
   !---------------!
   type Side_Type
-    integer :: ea, eb      ! left and right element
-    integer :: a, b, c, d  ! left, right, start and end point
-    integer :: mark        ! is it off, is on the boundary
-    integer :: new_numb    ! used for renumeration
+    integer  :: ea, eb      ! left and right element
+    integer  :: a, b, c, d  ! left, right, start and end point
+    integer  :: mark        ! is it off, is on the boundary
+    integer  :: new_numb    ! used for renumeration
     real(RP) :: s
   end type
 
@@ -71,6 +72,22 @@
     integer :: type
   end type
 
+  !-----------------------------!
+  !   Boundary condition type   !
+  !-----------------------------!
+  type Boun_Type
+    character :: type    ! can be D/d (Dirchlet) or N/n (Neumann)
+    real(RP)  :: value   ! for Dirichlet conditions
+  end type
+
+  !-------------------!
+  !   Material type   !
+  !-------------------!
+  type Mate_Type
+    real(RP) :: mu  ! diffusion constant
+    real(RP) :: j   ! source
+  end type
+
   !----------------------------------!
   !   Mesh is a composition of all   !
   !    those types defined above     !
@@ -78,12 +95,15 @@
   type Mesh_Type
     integer         :: n_elem, n_node, n_side
     integer         :: n_point, n_chain, n_segment
+    integer         :: n_bound, n_mater
     type(Elem_Type) :: elem(0:MAX_NODES*2)
     type(Node_Type) :: node(0:MAX_NODES)
     type(Node_Type) :: point(0:MAX_NODES/2)
     type(Side_Type) :: side(0:MAX_NODES*3)
     type(Segm_Type) :: segment(0:MAX_NODES/16)
-    type(Chai_Type) :: chain(0:MAX_NODES/16)
+    type(Chai_Type) :: chain(0:MAX_NODES/32)
+    type(Boun_Type) :: bound(0:MAX_NODES/32)
+    type(Mate_Type) :: mater(0:MAX_NODES/32)
   end type
 
   contains

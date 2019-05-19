@@ -7,7 +7,7 @@
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e
   integer                  :: i, j, k, max_width
-  real(RP)                 :: area, max_area, min_area, avg_area
+  real(RP)                 :: area, max_area, min_area, avg_area, tot_area
   real(RP)                 :: max_r_rat, min_r_rat, avg_r_rat
   character(len=CL)        :: line
   integer, parameter       :: L = 10
@@ -53,7 +53,7 @@
   !-------------------!
   !   Element areas   !
   !-------------------!
-  avg_area =  0.0
+  tot_area =  0.0
   max_area = -GREAT
   min_area = +GREAT
   do e = 0, ne-1
@@ -64,10 +64,10 @@
       area = Mesh_Mod_Area(node(i), node(j), node(k))
       max_area = max(max_area, area)
       min_area = min(min_area, area)
-      avg_area = avg_area + area
+      tot_area = tot_area + area
     end if
   end do
-  avg_area = avg_area / ne
+  avg_area = tot_area / ne
 
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
@@ -79,6 +79,9 @@
   print *, trim(line)
   write(line( 1+L:26+L), "(a)")  "# Average element area  : "
   write(line(27+L:36+L), "(es10.4)") avg_area
+  print *, trim(line)
+  write(line( 1+L:26+L), "(a)")  "# Total domain area     : "
+  write(line(27+L:36+L), "(es10.4)") tot_area
   print *, trim(line)
   line( 1+L:57+L) = "#-------------------------------------------------------#"
   print *, trim(line)

@@ -1,9 +1,10 @@
 !==============================================================================!
-  subroutine File_Mod_Load_Domain(mesh)
+  subroutine File_Mod_Load_Domain(mesh, comm)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Mesh_Type), target :: mesh
+  type(Comm_Type), target :: comm
 !-----------------------------------[Locals]-----------------------------------!
   character(len=CL)        :: line
   character(len=CL)        :: dumc
@@ -14,7 +15,7 @@
   type(Segm_Type), pointer :: segment(:)
 !==============================================================================!
 
-  open(FU, file = name)
+  open(FU, file = comm % problem_name)
 
   ! Take aliases
   np      => mesh % n_point
@@ -37,6 +38,7 @@
                   point(n) % f,  &
                   point(n) % mark
 
+    ! Initialize number of times it was inserted
     point(n) % inserted = 0
   end do
 

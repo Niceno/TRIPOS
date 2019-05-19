@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Draw(mesh, delaunay, voronoi)
+  subroutine File_Mod_Dxf_Draw_Mesh(mesh, delaunay, voronoi)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
@@ -16,7 +16,7 @@
   type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
-  call Cpu_Timer_Mod_Start('File_Mod_Dxf_Draw')
+  call Cpu_Timer_Mod_Start('File_Mod_Dxf_Draw_Mesh')
 
   ! Take aliases
   ne   => mesh % n_elem
@@ -103,6 +103,6 @@
     end do
   end if
 
-  call Cpu_Timer_Mod_Stop('File_Mod_Dxf_Draw')
+  call Cpu_Timer_Mod_Stop('File_Mod_Dxf_Draw_Mesh')
 
   end subroutine

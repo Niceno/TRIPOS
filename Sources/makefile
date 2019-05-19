@@ -29,12 +29,19 @@ VPATH = Global
 
 # Modules in the local directory
 SRC_MOD += Const_Mod.f90	\
+           Comm_Mod.f90		\
+           Sort_Mod.f90		\
            Cpu_Timer_Mod.f90	\
            Mesh_Mod.f90		\
+           Vector_Mod.f90	\
+           Matrix_Mod.f90	\
+           Solver_Mod.f90	\
            File_Mod.f90
 
-
-SRC_FUN = Setup_Chains.f90	\
+SRC_FUN = Swap_Int.f90			\
+          Setup_Chains.f90		\
+          Discretize.f90		\
+          Parse_Command_Line.f90	\
           Main.f90
 
 #--------------------------------------------------------

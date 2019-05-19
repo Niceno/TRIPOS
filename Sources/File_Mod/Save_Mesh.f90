@@ -1,12 +1,13 @@
 !==============================================================================!
-  subroutine File_Mod_Save_Mesh(mesh)
+  subroutine File_Mod_Save_Mesh(mesh, comm)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Mesh_Type), target :: mesh
+  type(Comm_Type)         :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, s, n
-  integer                  :: nf
+  integer                  :: nf, len
   integer,         pointer :: nn, ne, ns
   type(Node_Type), pointer :: node(:)
   type(Elem_Type), pointer :: elem(:)
@@ -24,15 +25,14 @@
   side => mesh % side
   nf   =  num_from      ! take alias of "num_from"; this is zero or one
 
-  len = len_trim(name)
-
   !---------------!
   !   Node data   !
   !---------------!
 
-  ! Form file name and open it
-  name(len:len) = "n"
-  open(unit=FU, file=name)
+  ! Form file name and open it (bad practice to fiddle comm variable here)
+  len = len_trim(comm % problem_name)
+  comm % problem_name(len:len) = "n"
+  open(unit=FU, file = comm % problem_name)
 
   ! Save
   write(FU, *) nn
@@ -50,8 +50,8 @@
   !------------------!
 
   ! Form file name and open it
-  name(len:len) = "e"
-  open(unit=FU, file=name)
+  comm % problem_name(len:len) = "e"
+  open(unit=FU, file = comm % problem_name)
 
   ! Save
   write(FU, *) ne
@@ -76,8 +76,8 @@
   !---------------!
 
   ! Form file name and open it
-  name(len:len) = "s"
-  open(unit=FU, file=name)
+  comm % problem_name(len:len) = "s"
+  open(unit=FU, file = comm % problem_name)
 
   ! Save
   write(FU, *) ns

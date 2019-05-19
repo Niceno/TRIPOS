@@ -1,5 +1,5 @@
 !==============================================================================!
-  subroutine Mesh_Mod_Classify(mesh)
+  subroutine Mesh_Mod_Classify(mesh, r_tol)
 !*-----------------------------------------------------------------------------!
 !  Find the ugliest element                                                    !
 !                                                                              !
@@ -13,6 +13,7 @@
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Mesh_Type), target :: mesh
+  real(RP)                :: r_tol
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, ei, ej, ek, si, sj, sk
   real(RP)                 :: max_ratio, f
