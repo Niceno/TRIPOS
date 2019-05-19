@@ -35,7 +35,9 @@
   call Cpu_Timer_Mod_Start('Easymesh_Main')
 
   !----------------------------------!
+  !                                  !
   !   Parse command line arguments   !
+  !                                  !
   !----------------------------------!
 
   ! No command line arguments were specified
@@ -55,8 +57,10 @@
   end if
 
   !-----------------------------------------!
+  !                                         !
   !   Finished processing user arguments,   !
   !      mesh generation can now start      !
+  !                                         !
   !-----------------------------------------!
   if(comm % mes .eq. ON) call File_Mod_Logo
   call File_Mod_Load_Domain(mesh, comm)   ! load the domain file
