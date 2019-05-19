@@ -4,6 +4,7 @@
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod,     only: RP, MAX_NODES, ON, OFF, GREAT, OPEN, CLOSED,  &
                            ACTIVE, WAITING, DONE
+  use Comm_Mod
   use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
   implicit none
@@ -120,6 +121,7 @@
   include 'Mesh_Mod/Spacing.f90'
   include 'Mesh_Mod/Classify.f90'
   include 'Mesh_Mod/Compress.f90'
+  include 'Mesh_Mod/Generate.f90'
   include 'Mesh_Mod/New_Node.f90'
   include 'Mesh_Mod/Renumber.f90'
   include 'Mesh_Mod/Materials.f90'
