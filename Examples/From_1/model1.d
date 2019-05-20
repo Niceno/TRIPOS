@@ -1,6 +1,6 @@
 #--------------#
 #              #
-#   model2.d   #
+#   model1.d   #
 #              #
 #--------------#
 
@@ -20,7 +20,7 @@
 #---------------------------#
 
 # The section starts with one line specifying number of points #
-14   # in this line there is the number of points #
+7
 
 # For each point we have one line with following entries (columns):      #
 # - one word describing the point                                        #
@@ -33,37 +33,24 @@
 # We start with ten points which shouldn't move.  #
 # The points define problem boundary              #
 #  word      x     y    spc   marker              #
-  pnt-01:   0.0   0.0   1.0     1
-  pnt-02:   5.0   0.0   1.0     1
-  pnt-03:  80.0   0.0   6.0     1
-  pnt-04:  90.0  35.0   6.0     1
-  pnt-05:  60.0  50.0   1.0     1
-  pnt-06:   0.0  80.0   2.0     1
-  pnt-07:  10.0  50.0   1.0     1
-  pnt-08:  20.0  50.0   1.0     1
-  pnt-09:  20.0  30.0   1.0     1
-  pnt-10:  60.0  30.0   1.0     1
+    1:      0.0   0.0   0.5     1
+    2:     20.0   0.0   0.25    1
+    3:     20.0   5.0   0.25    1
+    4:     25.0   5.0   0.25    1
+    5:     25.0  25.0   0.5     1
+    6:      0.0  25.0   0.5     1
 
 # One point for which doesn't belong to any chain   #
 # but is inserted only to control mesh spacing      #
 #  word      x     y    spc   marker                #
-  pnt-11:  40.0  40.0   3.0     0
-
-# Three poins which will be inserted to denote materials, in this order:  #
-#  1: iron                                                                #
-#  2: wire                                                                #
-#  3: air                                                                 #
-#  word      x     y    spc   marker                                      #
-  pnt-12:  40.0  10.0   2.0     1
-  pnt-13:  40.0  40.0   2.0     2
-  pnt-14:  40.0  55.0   2.0     3
+    7:     10.0  15.0   2.5     0
 
 #------------------------------#
 #   Second section: segments   #
 #------------------------------#
 
-# The section starts with one line specifying number of segments #
-13   # this line contains number of segments #
+# The section starts with one line specifying number of points #
+7
 
 # For each segment we have one line with following entries (columns):  #
 # - one word describing the segment                                    #
@@ -73,28 +60,17 @@
 
 # Six segmentns defining the contours of the domain              #
 #  word     pnt-1  pnt-2  marker                                 #
-  seg-01:     1      2      1    # 1 will be Dirichlet in name.b #
-  seg-02:     2      3      1    # 1 will be Dirichlet in name.b #
-  seg-03:     3      4      1    # 1 will be Dirichlet in name.b #
-  seg-04:     4      5      2    # 2 will be Neumann in name.b   #
-  seg-05:     5      6      2    # 2 will be Neumann in name.b   #
-  seg-06:     6      1      2    # 2 will be Neumann in name.b   #
+    1:       1      2       3
+    2:       2      3       2
+    3:       3      4       2
+    4:       4      5       3
+    5:       5      6       1
+    6:       6      1       1
 
-# Separation between iron and wire #
-#  word     pnt-1  pnt-2  marker   #
-  seg-07:     5      8      2
-  seg-08:     8      9      2
-  seg-09:     9     10      2
-  seg-10:    10      5      2
-
-# Separation between iron and air #
-#  word     pnt-1  pnt-2  marker  #
-  seg-11:     2      7      2
-  seg-12:     7      8      2
-
-# "Fake" segment for coarsening                         #
+# Segment to accomodate point for coarsening            #
+#                                                       #
 # This segment has marker 0, meaning it is not static.  #
 # It moves during the mesh generation process, but      #
 # gives desired element spacing in its surroundings.    #
-#  word     pnt-1  pnt-2  marker  #
-  seg-13:    11     11      0
+#  word     pnt-1  pnt-2  marker                        #
+    7:       7      7       0
