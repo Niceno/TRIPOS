@@ -18,6 +18,8 @@
   type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
+  if(comm % messages .eq. ON) print *, "Plotting the mesh in dfx format"
+
   ! Take aliases
   ne   => mesh % n_elem
   ns   => mesh % n_side

@@ -16,6 +16,8 @@
 
   call Cpu_Timer_Mod_Start('File_Mod_Save_Mesh')
 
+  if(comm % messages .eq. ON) print *, "Saving the mesh"
+
   ! Take aliases
   nn   => mesh % n_node
   ne   => mesh % n_elem

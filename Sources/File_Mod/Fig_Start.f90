@@ -11,6 +11,8 @@
   character(len=CL) :: fig_mesh_name = ""
 !==============================================================================!
 
+  if(comm % messages .eq. ON) print *, "Plotting the mesh in fig format"
+
   len = len_trim(comm % problem_name)
   fig_mesh_name(    1:len-2) = comm % problem_name(1:len-2)
   fig_mesh_name(len-1:len+2) = ".fig"

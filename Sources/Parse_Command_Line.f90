@@ -24,7 +24,7 @@
 
   ! ... and if so, create example file and beat it
   if(argv .eq. "+example") then
-    comm % exa = ON
+    comm % example = ON
     return
   end if
 
@@ -69,19 +69,19 @@
     if(argv .eq. "+dxf" .or. argv .eq. "+fig") then
       call get_command_argument(arg+1, argv)
       if(argv .eq. "D") then
-        comm % del = ON
-        comm % vor = OFF
+        comm % delaunay = ON
+        comm % voronoi  = OFF
       else if(argv .eq. "V") then
-        comm % del = OFF
-        comm % vor = ON
+        comm % delaunay = OFF
+        comm % voronoi  = ON
       else
-        comm % del = ON
-        comm % vor = ON
+        comm % delaunay = ON
+        comm % voronoi  = ON
       end if
     end if
-    if(argv .eq. "-r")   comm % relax  = OFF   ! no relaxation
-    if(argv .eq. "-s")   comm % smooth = OFF   ! no smoothing
-    if(argv .eq. "-m")   comm % mes    = OFF   ! no messages
+    if(argv .eq. "-r")  comm % relax    = OFF
+    if(argv .eq. "-s")  comm % smooth   = OFF
+    if(argv .eq. "-m")  comm % messages = OFF
   end do
 
   end subroutine

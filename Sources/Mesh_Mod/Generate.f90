@@ -18,7 +18,7 @@
   !   Main algorithm to   !
   !    generate a mesh    !
   !-----------------------!
-  if(comm % mes .eq. ON) print *, "Generating mesh.  Please wait!"
+  if(comm % messages .eq. ON) print *, "Generating mesh.  Please wait!"
 
   if(comm % tri .eq. ON) then
     do while(ugly .ne. OFF)
@@ -26,12 +26,12 @@
       call Mesh_Mod_New_Node(mesh)
       call Mesh_Mod_Classify(mesh, comm % r_tol)
 
-      if(comm % mes .eq. ON .and.  &
+      if(comm % messages .eq. ON .and.  &
          mod(mesh % n_node, 500) .eq. 0) print "(i6,a)", mesh % n_node, " nodes"
 
       ! Exit because maximum number of nodes has been reached
       if(mesh % n_node .eq. MAX_NODES-1) then
-        if(comm % mes .eq. on) then
+        if(comm % messages .eq. on) then
           print "(a,i6,a)", " Maximum number of nodes (",  &
                             MAX_NODES, ") has been reached." 
           print "(a)",      " The mesh might suffer from poor quality"
@@ -50,7 +50,7 @@
   !   Improve mesh quality by relaxation and smooting   !
   !-----------------------------------------------------!
   if(comm % relax .eq. ON .or. comm % smooth .eq. ON) then
-    if(comm % mes .eq. ON) print *, "Improving the mesh quality"
+    if(comm % messages .eq. ON) print *, "Improving the mesh quality"
 
     if(comm % relax .eq. ON)   call Mesh_Mod_Relax(mesh)
     if(comm % relax .eq. ON .or.  &
@@ -60,16 +60,16 @@
   !--------------------------------!
   !   Renumber all mesh entities   !
   !--------------------------------!
-  if(comm % mes .eq. ON) print *, "Renumerating nodes, elements and sides"
+  if(comm % messages .eq. ON) print *, "Renumerating nodes, elements and sides"
   call Mesh_Mod_Renumber(mesh)
   call Mesh_Mod_Compress(mesh)
 
   !----------------------------!
   !   Process material marks   !
   !----------------------------!
-  if(comm % mes .eq. ON) print *, "Processing material marks"
+  if(comm % messages .eq. ON) print *, "Processing material marks"
   call Mesh_Mod_Materials(mesh)
 
-  if(comm % mes .eq. ON) call Cpu_Timer_Mod_Stop('Mesh_Mod_Generate')
+  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Mesh_Mod_Generate')
 
   end subroutine

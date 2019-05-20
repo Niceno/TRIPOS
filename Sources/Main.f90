@@ -51,7 +51,7 @@
   end if  ! some command arguments were passed
 
   ! If user wanted to create an example, do it an exit
-  if(comm % exa .eq. ON) then
+  if(comm % example .eq. ON) then
     call File_Mod_Example
     stop
   end if
@@ -62,7 +62,7 @@
   !      mesh generation can now start      !
   !                                         !
   !-----------------------------------------!
-  if(comm % mes .eq. ON) call File_Mod_Logo
+  if(comm % messages .eq. ON) call File_Mod_Logo
   call File_Mod_Load_Domain(mesh, comm)   ! load the domain file
   call Setup_Chains(mesh)                 ! set the domain up
 
@@ -74,16 +74,14 @@
   !-----------------------------------------!
   !   Save mesh in native Easymesh format   !
   !-----------------------------------------!
-  if(comm % mes .eq. ON) print *, "Saving the mesh"
   call File_Mod_Save_Mesh(mesh, comm)
 
   !--------------------------------!
   !   Plot fig file if requested   !
   !--------------------------------!
   if(comm % fig .eq. ON) then
-    if(comm % mes .eq. ON) print *, "Plotting the mesh in fig format"
     call File_Mod_Fig_Start(comm)
-    call File_Mod_Fig_Draw_Mesh(mesh, comm % del, comm % vor)
+    call File_Mod_Fig_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
     call File_Mod_Fig_End
   end if
 
@@ -91,16 +89,15 @@
   !   Plot dxf file if requested   !
   !--------------------------------!
   if(comm % dxf .eq. ON) then
-    if(comm % mes .eq. ON) print *, "Plotting the mesh in dfx format"
     call File_Mod_Dxf_Start_Mesh(mesh, comm)
-    call File_Mod_Dxf_Draw_Mesh(mesh, comm % del, comm % vor)
+    call File_Mod_Dxf_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
     call File_Mod_Dxf_End
   end if
 
-  if(comm % mes .eq. ON) print *, "Done!"
-  if(comm % mes .eq. ON) print *, ""
+  if(comm % messages .eq. ON) print *, "Done!"
+  if(comm % messages .eq. ON) print *, ""
 
-  if(comm % mes .eq. ON) call File_Mod_Mesh_Statistics(mesh)
+  if(comm % messages .eq. ON) call File_Mod_Mesh_Statistics(mesh)
 
   !-------------------------------!
   !                               !
@@ -108,7 +105,9 @@
   !    solution can now start     !
   !                               !
   !-------------------------------!
-  if(comm % mes .eq. ON) print *, "Solving conservation equations.  Please wait!"
+  if(comm % messages .eq. ON) then
+    print *, "Solving conservation equations.  Please wait!"
+  end if
 
   !--------------------------!
   !   Create linear solver   !
@@ -132,7 +131,9 @@
 
   do i = 1, 12000
 
-    if(mod(i, 20) .eq. 0) print "(a,i5,es12.4)", " Current time step: ", i, dt
+    if(mod(i, 20) .eq. 0 .and. comm % messages .eq. ON) then
+      print "(a,i5,es12.4)", " Current time step: ", i, dt
+    end if
 
     ! Actual value becomes old
     x_o % val(:) = x % val(:)
@@ -144,16 +145,15 @@
     ! call Solver_Mod_Bicg(krylov, a, x, b, max_it, act_it, t_res, f_res)
     call Solver_Mod_Cg(krylov, a, x, b, max_it, act_it, t_res, f_res)
 
+    ! Gradually increase time step, you want steady solution anyway
     dt = dt * 1.2
 
     if(act_it .eq. 0) then
       goto 1
     end if
 
-    if( mod(i, 20) .eq. 0 ) then
-      if(comm % mes .eq. ON) then
-        print "(a,i5,es12.4)", " Solver iterations: ", act_it, f_res
-      end if
+    if(mod(i, 20) .eq. 0 .and. comm % messages .eq. ON) then
+      print "(a,i5,es12.4)", " Solver iterations: ", act_it, f_res
     end if
   end do
 1 continue
@@ -165,7 +165,7 @@
   call File_Mod_Dxf_Draw_Results(x)
   call File_Mod_Dxf_End
 
-  if(comm % mes .eq. ON) call Cpu_Timer_Mod_Stop('Easymesh_Main')
-  if(comm % mes .eq. ON) call Cpu_Timer_Mod_Statistics()
+  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Easymesh_Main')
+  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Statistics()
 
   end program
