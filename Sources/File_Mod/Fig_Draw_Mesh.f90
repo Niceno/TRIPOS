@@ -69,7 +69,7 @@
   !   Draw boundary   !
   !-------------------!
   do s = 0, ns-1
-    if(side(s) % mark>0) then  ! it means, side is on the boundary */
+    if(side(s) % mark .gt. 0) then  ! it means, side is on the boundary */
       xc = node(side(s) % c) % x
       yc = node(side(s) % c) % y
       xd = node(side(s) % d) % x
@@ -78,7 +78,9 @@
                               450+floor(scl*yc),  &
                               450+floor(scl*xd),  &
                               450+floor(scl*yd),  &
-                              0, 3, 0)
+                              0,                  &  ! line style
+                              3,                  &  ! line width,
+                              side(s) % mark)        ! color
     end if
   end do
 
@@ -87,7 +89,7 @@
   !-------------------!
   if(delaunay .eq. ON) then
     do s = 0, ns-1
-      if(side(s) % mark==0) then  ! it means: side is in the domain */
+      if(side(s) % mark .eq. 0) then  ! it means: side is in the domain */
         xc = node(side(s) % c) % x
         yc = node(side(s) % c) % y
         xd = node(side(s) % d) % x
@@ -130,7 +132,9 @@
                                450+floor(scl*ya),  &
                                450+floor(scl*xb),  &
                                450+floor(scl*yb),  &
-                               0, 1, 4)
+                               0,                  &  ! line style
+                               1,                  &  ! line width,
+                               4)                     ! color
       end if
     end do
   end if
@@ -154,10 +158,10 @@
       call File_Mod_Fig_Circle(450+floor(scl*xn),       &
                                450+floor(scl*yn),       &
                                    floor(scl*rad*0.4),  &
-                               0, 3, 0)
-!     call File_Mod_Fig_Circle(xn, yn, rad*0.3, bnd_layer(1:11))
-!     call File_Mod_Fig_Circle(xn, yn, rad*0.2, bnd_layer(1:11))
-!     call File_Mod_Fig_Circle(xn, yn, rad*0.1, bnd_layer(1:11))
+                               0,                       &  ! style
+                               1,                       &  ! width 
+                               0,                       &  ! line color,
+                               node(n) % mark)             ! fill color
     end if
   end do
 
