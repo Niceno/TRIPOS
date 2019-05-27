@@ -11,7 +11,7 @@
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, n, s, ea, eb
   real(RP)                 :: xc, yc, xd, yd, xa, ya, xb, yb
-  real(RP)                 :: xi, yi, xj, yj, xk, yk
+  real(RP)                 :: xi, yi, xj, yj, xk, yk, xn, yn, rad
   real(RP)                 :: xmax, xmin, ymax, ymin, scl
   real(RP), parameter      :: zero = 0.0
   integer,         pointer :: nn, ne, ns
@@ -134,6 +134,32 @@
       end if
     end do
   end if
+
+  !-------------------------!
+  !   Draw boundary nodes   !
+  !-------------------------!
+
+  ! Find mesh size on the boundary
+  rad = GREAT
+  do n = 0, nn-1
+    if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary */
+      rad = min(rad, node(n) % f)
+    end if
+  end do
+
+  do n = 0, nn-1
+    if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary */
+      xn  = node(n) % x
+      yn  = node(n) % y
+      call File_Mod_Fig_Circle(450+floor(scl*xn),       &
+                               450+floor(scl*yn),       &
+                                   floor(scl*rad*0.4),  &
+                               0, 3, 0)
+!     call File_Mod_Fig_Circle(xn, yn, rad*0.3, bnd_layer(1:11))
+!     call File_Mod_Fig_Circle(xn, yn, rad*0.2, bnd_layer(1:11))
+!     call File_Mod_Fig_Circle(xn, yn, rad*0.1, bnd_layer(1:11))
+    end if
+  end do
 
   call Cpu_Timer_Mod_Stop('File_Mod_Fig_Draw_Mesh')
 
