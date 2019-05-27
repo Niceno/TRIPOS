@@ -37,12 +37,12 @@
   pnt-02:   5.0   0.0   1.0     1
   pnt-03:  80.0   0.0   6.0     1
   pnt-04:  90.0  35.0   6.0     1
-  pnt-05:  60.0  50.0   1.0     1
-  pnt-06:   0.0  80.0   2.0     1
-  pnt-07:  10.0  50.0   1.0     1
-  pnt-08:  20.0  50.0   1.0     1
-  pnt-09:  20.0  30.0   1.0     1
-  pnt-10:  60.0  30.0   1.0     1
+  pnt-05:  60.0  50.0   1.0     2
+  pnt-06:   0.0  80.0   2.0     2
+  pnt-07:  10.0  50.0   1.0     3
+  pnt-08:  20.0  50.0   1.0     3
+  pnt-09:  20.0  30.0   1.0     3
+  pnt-10:  60.0  30.0   1.0     3
 
 # One point for which doesn't belong to any chain   #
 # but is inserted only to control mesh spacing      #
@@ -82,15 +82,15 @@
 
 # Separation between iron and wire #
 #  word     pnt-1  pnt-2  marker   #
-  seg-07:     5      8      2
-  seg-08:     8      9      2
-  seg-09:     9     10      2
-  seg-10:    10      5      2
+  seg-07:     5      8      3
+  seg-08:     8      9      3
+  seg-09:     9     10      3
+  seg-10:    10      5      3
 
 # Separation between iron and air #
 #  word     pnt-1  pnt-2  marker  #
-  seg-11:     2      7      2
-  seg-12:     7      8      2
+  seg-11:     2      7      3
+  seg-12:     7      8      3
 
 # "Fake" segment for coarsening                         #
 # This segment has marker 0, meaning it is not static.  #
