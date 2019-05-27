@@ -21,6 +21,7 @@
   include 'File_Mod/Example.f90'
   include 'File_Mod/Dxf_End.f90'
   include 'File_Mod/Dxf_Line.f90'
+  include 'File_Mod/Dxf_Circle.f90'
   include 'File_Mod/Dxf_Draw_Mesh.f90'
   include 'File_Mod/Dxf_Draw_Results.f90'
   include 'File_Mod/Dxf_Solid.f90'

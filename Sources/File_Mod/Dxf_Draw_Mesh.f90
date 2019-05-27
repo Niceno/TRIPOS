@@ -6,11 +6,11 @@
   type(Mesh_Type), target :: mesh
   integer                 :: delaunay, voronoi
 !-----------------------------------[Locals]-----------------------------------!
-  integer                  :: e, s, ea, eb
+  integer                  :: n, e, s, ea, eb
   real(RP)                 :: xc, yc, xd, yd, xa, ya, xb, yb
-  real(RP)                 :: xi, yi, xj, yj, xk, yk
+  real(RP)                 :: xi, yi, xj, yj, xk, yk, xn, yn, rad
   character(len=CL)        :: bnd_layer, mat_layer
-  integer,         pointer :: ne, ns
+  integer,         pointer :: ne, ns, nn
   type(Node_Type), pointer :: node(:)
   type(Elem_Type), pointer :: elem(:)
   type(Side_Type), pointer :: side(:)
@@ -21,12 +21,13 @@
   ! Take aliases
   ne   => mesh % n_elem
   ns   => mesh % n_side
+  nn   => mesh % n_node
   node => mesh % node
   elem => mesh % elem
   side => mesh % side
 
   !-------------------!
-  !   Draw Elements   !
+  !   Draw elements   !
   !-------------------!
   do e = 0, ne-1
     if(elem(e) % mark .ne. OFF) then  ! it means: side is in the domain */
@@ -102,6 +103,30 @@
       end if
     end do
   end if
+
+  !-------------------------!
+  !   Draw boundary nodes   !
+  !-------------------------!
+
+  ! Find mesh size on the boundary
+  rad = GREAT
+  do n = 0, nn-1
+    if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary */
+      rad = min(rad, node(n) % f)
+    end if
+  end do
+
+  do n = 0, nn-1
+    if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary */
+      xn  = node(n) % x
+      yn  = node(n) % y
+      write(bnd_layer(10:11), "(i2.2)") node(n) % mark
+      call File_Mod_Dxf_Circle(xn, yn, rad*0.4, bnd_layer(1:11))
+      call File_Mod_Dxf_Circle(xn, yn, rad*0.3, bnd_layer(1:11))
+      call File_Mod_Dxf_Circle(xn, yn, rad*0.2, bnd_layer(1:11))
+      call File_Mod_Dxf_Circle(xn, yn, rad*0.1, bnd_layer(1:11))
+    end if
+  end do
 
   call Cpu_Timer_Mod_Stop('File_Mod_Dxf_Draw_Mesh')
 
