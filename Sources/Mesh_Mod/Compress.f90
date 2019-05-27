@@ -41,6 +41,7 @@
       r_nn = r_nn + 1
       r_node(node(n) % new_numb) % x    = node(n) % x
       r_node(node(n) % new_numb) % y    = node(n) % y
+      r_node(node(n) % new_numb) % f    = node(n) % f
       r_node(node(n) % new_numb) % mark = node(n) % mark
     end if
   end do
@@ -49,6 +50,7 @@
   nn = r_nn
   node(0:nn-1) % x    = r_node(0:nn-1) % x
   node(0:nn-1) % y    = r_node(0:nn-1) % y
+  node(0:nn-1) % f    = r_node(0:nn-1) % f
   node(0:nn-1) % mark = r_node(0:nn-1) % mark
 
   ! Change elements and sides who contain node data
