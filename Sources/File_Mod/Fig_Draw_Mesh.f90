@@ -9,15 +9,14 @@
   type(Mesh_Type), target :: mesh
   integer                 :: delaunay, voronoi
 !-----------------------------------[Locals]-----------------------------------!
-  integer                  :: e, n, s, ea, eb
-  real(RP)                 :: xc, yc, xd, yd, xa, ya, xb, yb
-  real(RP)                 :: xi, yi, xj, yj, xk, yk, xn, yn, rad
-  real(RP)                 :: xmax, xmin, ymax, ymin, scl
-  real(RP), parameter      :: zero = 0.0
-  integer,         pointer :: nn, ne, ns
-  type(Node_Type), pointer :: node(:)
-  type(Elem_Type), pointer :: elem(:)
-  type(Side_Type), pointer :: side(:)
+  integer                    :: e, n, s, ea, eb
+  real(RP)                   :: xc, yc, xd, yd, xa, ya, xb, yb
+  real(RP)                   :: xi, yi, xj, yj, xk, yk, xn, yn, rad
+  real(RP),        parameter :: zero = 0.0
+  integer,         pointer   :: nn, ne, ns
+  type(Node_Type), pointer   :: node(:)
+  type(Elem_Type), pointer   :: elem(:)
+  type(Side_Type), pointer   :: side(:)
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Fig_Draw_Mesh')
