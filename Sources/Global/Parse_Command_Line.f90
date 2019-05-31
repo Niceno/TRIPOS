@@ -4,11 +4,6 @@
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod
   use Comm_Mod
-! use File_Mod
-! use Vector_Mod
-! use Matrix_Mod
-! use Solver_Mod
-! use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
@@ -65,8 +60,11 @@
       comm % smooth = OFF
     end if
     if(argv .eq. "+dxf") comm % dxf = ON    ! create dxf
+    if(argv .eq. "+eps") comm % eps = ON    ! create dxf
     if(argv .eq. "+fig") comm % fig = ON    ! create fig
-    if(argv .eq. "+dxf" .or. argv .eq. "+fig") then
+    if(argv .eq. "+dxf" .or.  &
+       argv .eq. "+eps" .or.  &
+       argv .eq. "+fig") then
       call get_command_argument(arg+1, argv)
       if(argv .eq. "D") then
         comm % delaunay = ON

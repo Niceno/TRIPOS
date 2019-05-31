@@ -11,8 +11,7 @@
 !==============================================================================!
 
   integer, parameter :: N_ISOLINE = 17  ! seem to work well with DXF colors
-
-! character(len=CL) :: fig_results_name = ""
+  real(RP)           :: xmax, xmin, ymax, ymin, scl
 
   contains
 
@@ -27,6 +26,11 @@
   include 'File_Mod/Dxf_Solid.f90'
   include 'File_Mod/Dxf_Start_Mesh.f90'
   include 'File_Mod/Dxf_Start_Results.f90'
+  include 'File_Mod/Eps_End.f90'
+  include 'File_Mod/Eps_Line.f90'
+  include 'File_Mod/Eps_Draw_Mesh.f90'
+  include 'File_Mod/Eps_Solid.f90'
+  include 'File_Mod/Eps_Start_Mesh.f90'
   include 'File_Mod/Fig_End.f90'
   include 'File_Mod/Fig_Line.f90'
   include 'File_Mod/Fig_Circle.f90'

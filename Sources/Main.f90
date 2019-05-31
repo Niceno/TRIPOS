@@ -77,21 +77,30 @@
   call File_Mod_Save_Mesh(mesh, comm)
 
   !--------------------------------!
-  !   Plot fig file if requested   !
-  !--------------------------------!
-  if(comm % fig .eq. ON) then
-    call File_Mod_Fig_Start(comm)
-    call File_Mod_Fig_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
-    call File_Mod_Fig_End
-  end if
-
-  !--------------------------------!
   !   Plot dxf file if requested   !
   !--------------------------------!
   if(comm % dxf .eq. ON) then
     call File_Mod_Dxf_Start_Mesh(mesh, comm)
     call File_Mod_Dxf_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
     call File_Mod_Dxf_End
+  end if
+
+  !--------------------------------!
+  !   Plot eps file if requested   !
+  !--------------------------------!
+  if(comm % eps .eq. ON) then
+    call File_Mod_Eps_Start_Mesh(mesh, comm)
+    call File_Mod_Eps_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
+    call File_Mod_Eps_End
+  end if
+
+  !--------------------------------!
+  !   Plot fig file if requested   !
+  !--------------------------------!
+  if(comm % fig .eq. ON) then
+    call File_Mod_Fig_Start(comm)
+    call File_Mod_Fig_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
+    call File_Mod_Fig_End
   end if
 
   if(comm % messages .eq. ON) print *, "Done!"
@@ -108,6 +117,8 @@
   if(comm % messages .eq. ON) then
     print *, "Solving conservation equations.  Please wait!"
   end if
+
+  stop
 
   !--------------------------!
   !   Create linear solver   !
