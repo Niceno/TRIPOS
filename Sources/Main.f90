@@ -94,8 +94,8 @@
   end if
 
   if(comm % messages .eq. ON) print *, "Done!"
-  if(comm % messages .eq. ON) print *, ""
 
+  if(comm % messages .eq. ON) print *, ""
   if(comm % messages .eq. ON) call File_Mod_Mesh_Statistics(mesh)
 
   !-------------------------------!
@@ -179,6 +179,8 @@
   end if
 
   if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Tripos_Main')
+
+  if(comm % messages .eq. ON) print *, ""
   if(comm % messages .eq. ON) call Cpu_Timer_Mod_Statistics()
 
   end program
