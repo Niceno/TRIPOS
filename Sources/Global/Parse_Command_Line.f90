@@ -27,19 +27,6 @@
   comm % problem_name = argv
   len = len_trim(comm % problem_name)
 
-  ! Form file names
-  if(comm % problem_name(len-1:len-1) .eq. ".") then
-    if(comm % problem_name(len:len) .eq. "d" .or.  &
-       comm % problem_name(len:len) .eq. "D") then
-    else
-      print *, "Critical error: Domain file name must have extension .d!"
-      stop
-  end if
-  else  ! extension was longer than one character
-    print *, "Critical error: Domain file name must have extension .d!"
-    stop
-  end if
-
   ! Parse command line options
   do arg = 2, command_argument_count()
     call get_command_argument(arg, argv)
