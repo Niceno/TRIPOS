@@ -118,8 +118,6 @@
     print *, "Solving conservation equations.  Please wait!"
   end if
 
-  stop
-
   !--------------------------!
   !   Create linear solver   !
   !--------------------------!
@@ -172,9 +170,20 @@
   !-------------------------------------!
   !   Plot results in DXF file format   !
   !-------------------------------------!
-  call File_Mod_Dxf_Start_Results(x, comm)
-  call File_Mod_Dxf_Draw_Results(x)
-  call File_Mod_Dxf_End
+  if(comm % dxf .eq. ON) then
+    call File_Mod_Dxf_Start_Results(x, comm)
+    call File_Mod_Dxf_Draw_Results(x)
+    call File_Mod_Dxf_End
+  end if
+
+  !-------------------------------------!
+  !   Plot results in EPS file format   !
+  !-------------------------------------!
+  if(comm % eps .eq. ON) then
+    call File_Mod_Eps_Start_Results(comm)
+    call File_Mod_Eps_Draw_Results(x)
+    call File_Mod_Eps_End
+  end if
 
   if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Easymesh_Main')
   if(comm % messages .eq. ON) call Cpu_Timer_Mod_Statistics()

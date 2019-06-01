@@ -30,8 +30,10 @@
   include 'File_Mod/Eps_Line.f90'
   include 'File_Mod/Eps_Circle.f90'
   include 'File_Mod/Eps_Draw_Mesh.f90'
+  include 'File_Mod/Eps_Draw_Results.f90'
   include 'File_Mod/Eps_Solid.f90'
   include 'File_Mod/Eps_Start_Mesh.f90'
+  include 'File_Mod/Eps_Start_Results.f90'
   include 'File_Mod/Fig_End.f90'
   include 'File_Mod/Fig_Line.f90'
   include 'File_Mod/Fig_Circle.f90'
@@ -46,6 +48,7 @@
   include 'File_Mod/Load_Material_Conditions.f90'
   include 'File_Mod/Get_Cool_Color.f90'
   include 'File_Mod/Get_Warm_Color.f90'
+  include 'File_Mod/Get_Rainbow_Color.f90'
 
   end module
 
