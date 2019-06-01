@@ -1,6 +1,6 @@
 #===============================================================================
 #
-#   Generate Makefile
+#   Tripos makefile
 #
 #-------------------------------------------------------------------------------
 
@@ -19,7 +19,7 @@ OPT_COMP = -J $(DIR_MODULE) -g -Wall
 OPT_LINK = $(OPT_COMP)
 
 # Program name (This should hardly change)
-PROGRAM_FILE = Easymesh_F
+PROGRAM_FILE = Tripos
 
 VPATH = Global
 

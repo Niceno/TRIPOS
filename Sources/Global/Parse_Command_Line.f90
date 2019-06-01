@@ -53,7 +53,7 @@
       if(argv .eq. "4")  comm % r_tol = 0.9
       if(argv .eq. "5")  comm % r_tol = 0.95
       if(argv .eq. "6")  comm % r_tol = 1.0
-  end if
+    end if
     if(argv .eq. "-d") then          ! don't triangulate the domain
       comm % tri    = OFF
       comm % relax  = OFF
@@ -61,10 +61,8 @@
     end if
     if(argv .eq. "+dxf") comm % dxf = ON    ! create dxf
     if(argv .eq. "+eps") comm % eps = ON    ! create dxf
-    if(argv .eq. "+fig") comm % fig = ON    ! create fig
     if(argv .eq. "+dxf" .or.  &
-       argv .eq. "+eps" .or.  &
-       argv .eq. "+fig") then
+       argv .eq. "+eps") then
       call get_command_argument(arg+1, argv)
       if(argv .eq. "D") then
         comm % delaunay = ON
@@ -80,6 +78,7 @@
     if(argv .eq. "-r")  comm % relax    = OFF
     if(argv .eq. "-s")  comm % smooth   = OFF
     if(argv .eq. "-m")  comm % messages = OFF
+    if(argv .eq. "+solve") comm % solve = ON    ! solve Poisoon's equation
   end do
 
   end subroutine

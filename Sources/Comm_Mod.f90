@@ -14,16 +14,16 @@
     character(len=CL) :: problem_name
 
     ! Command line arguments
+    integer  :: messages  = ON     ! print messages
     integer  :: example   = OFF    ! create example domain
     integer  :: tri       = ON     ! perform Delaunay triangulization
     integer  :: relax     = ON     ! perform relaxation
     integer  :: smooth    = ON     ! perform smoothing
     integer  :: dxf       = OFF    ! don't create DXF file
     integer  :: eps       = OFF    ! don't create EPS file
-    integer  :: fig       = OFF    ! don't create FIG file
     integer  :: delaunay  = OFF    ! don't draw Delaunay mesh in plots
     integer  :: voronoi   = OFF    ! don't draw Voronoi mesh in plots
-    integer  :: messages  = ON     ! print messages
+    integer  :: solve     = OFF    ! solve Poisson equation
     real(RP) :: r_tol     = 0.7    ! adjusts level of aggresivity
   end type
 
