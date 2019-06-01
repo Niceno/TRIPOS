@@ -8,25 +8,25 @@
   type(Comm_Type) :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: len
-  character(len=CL) :: eps_result_name = ""
+  character(len=CL) :: eps_results_name = ""
 !==============================================================================!
 
-  if(comm % messages .eq. ON) print *, "Plotting the mesh in eps format"
+  if(comm % messages .eq. ON) print *, "Plotting the results in eps format"
 
   ! Form file name ...
   len = len_trim(comm % problem_name)
-  eps_result_name(    1:len-2) = comm % problem_name(1:len-2)
-  eps_result_name(len-1:len+4) = ".r.eps"
+  eps_results_name(    1:len  ) = comm % problem_name(1:len)
+  eps_results_name(len+1:len+6) = ".r.eps"
 
   ! ... and open it
-  open(unit=FU, file=eps_result_name)
+  open(unit=FU, file=eps_results_name)
 
   !------------!
   !   Header   !
   !------------!
   write(FU, "(a)")     "%!PS-Adobe-2.0 EPSF-1.2"
-  write(FU, "(a)")     "%%Created by Easymesh Fortran"
-  write(FU, "(a, a)")  "%%File: ", trim(eps_result_name)
+  write(FU, "(a)")     "%%Created by Tripos"
+  write(FU, "(a, a)")  "%%File: ", trim(eps_results_name)
   write(FU, "(a)")     "%%BoundingBox: (atend)"
   write(FU, "(a)")     "save"
   write(FU, "(a)")     "countdictstack"

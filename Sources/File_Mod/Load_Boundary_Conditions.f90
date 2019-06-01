@@ -7,17 +7,30 @@
   type(Comm_Type), target :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: n, len
+  logical           :: file_exists
   character(len=CL) :: line
   character(len=CL) :: dumc
-  character(len=CL) :: bnd_cond_name = ""
+  character(len=CL) :: bnd_file_name = ""
 !==============================================================================!
 
+  ! Form file name
   len = len_trim(comm % problem_name)
-  bnd_cond_name(  1:len) = comm % problem_name(1:len)
-  bnd_cond_name(len:len) = "b"
+  bnd_file_name(    1:len  ) = comm % problem_name(1:len)
+  bnd_file_name(len+1:len+2) = ".b"
 
-  open(FU, file=bnd_cond_name)
+  ! Check if it exists
+  inquire(file=bnd_file_name, exist=file_exists)
+  if(.not. file_exists) then
+    print *, "File: ", trim(bnd_file_name), " does not exist!"
+    print *, "It is needed to specify boundary conditions."
+    print *, "Exiting solving the Poisson's equation!"
+    stop
+  end if
 
+  ! Open the file ...
+  open(FU, file=bnd_file_name)
+
+  ! ... and read it
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) mesh % n_bound
 

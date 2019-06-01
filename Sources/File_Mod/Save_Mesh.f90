@@ -12,6 +12,7 @@
   type(Node_Type), pointer :: node(:)
   type(Elem_Type), pointer :: elem(:)
   type(Side_Type), pointer :: side(:)
+  character(len=CL)        :: file_name
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Save_Mesh')
@@ -33,8 +34,9 @@
 
   ! Form file name and open it (bad practice to fiddle comm variable here)
   len = len_trim(comm % problem_name)
-  comm % problem_name(len:len) = "n"
-  open(unit=FU, file = comm % problem_name)
+  file_name(    1:len  ) = comm % problem_name(1:len)
+  file_name(len+1:len+2) = ".n"
+  open(unit=FU, file=file_name)
 
   ! Save
   write(FU, *) nn
@@ -52,8 +54,10 @@
   !------------------!
 
   ! Form file name and open it
-  comm % problem_name(len:len) = "e"
-  open(unit=FU, file = comm % problem_name)
+  len = len_trim(comm % problem_name)
+  file_name(    1:len  ) = comm % problem_name(1:len)
+  file_name(len+1:len+2) = ".e"
+  open(unit=FU, file=file_name)
 
   ! Save
   write(FU, *) ne
@@ -78,8 +82,10 @@
   !---------------!
 
   ! Form file name and open it
-  comm % problem_name(len:len) = "s"
-  open(unit=FU, file = comm % problem_name)
+  len = len_trim(comm % problem_name)
+  file_name(    1:len  ) = comm % problem_name(1:len)
+  file_name(len+1:len+2) = ".s"
+  open(unit=FU, file=file_name)
 
   ! Save
   write(FU, *) ns

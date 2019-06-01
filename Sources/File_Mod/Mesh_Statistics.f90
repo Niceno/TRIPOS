@@ -10,7 +10,7 @@
   real(RP)                 :: area, max_area, min_area, avg_area, tot_area
   real(RP)                 :: max_r_rat, min_r_rat, avg_r_rat
   character(len=CL)        :: line
-  integer, parameter       :: L = 10
+  integer, parameter       :: L = 8
   integer,         pointer :: nn, ne, ns
   type(Node_Type), pointer :: node(:)
   type(Elem_Type), pointer :: elem(:)

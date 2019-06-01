@@ -20,8 +20,8 @@
 
   ! Form file name
   len = len_trim(comm % problem_name)
-  dxf_results_name(    1:len-2) = comm % problem_name(1:len-2)
-  dxf_results_name(len-1:len+4) = ".r.dxf"
+  dxf_results_name(    1:len  ) = comm % problem_name(1:len)
+  dxf_results_name(len+1:len+6) = ".r.dxf"
 
   ! ... and open it
   open(unit=FU, file=dxf_results_name)

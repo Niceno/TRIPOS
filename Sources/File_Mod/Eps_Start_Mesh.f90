@@ -15,8 +15,8 @@
 
   ! Form file name ...
   len = len_trim(comm % problem_name)
-  eps_mesh_name(    1:len-2) = comm % problem_name(1:len-2)
-  eps_mesh_name(len-1:len+2) = ".eps"
+  eps_mesh_name(    1:len  ) = comm % problem_name(1:len)
+  eps_mesh_name(len+1:len+4) = ".eps"
 
   ! ... and open it
   open(unit=FU, file=eps_mesh_name)
@@ -25,7 +25,7 @@
   !   Header   !
   !------------!
   write(FU, "(a)")     "%!PS-Adobe-2.0 EPSF-1.2"
-  write(FU, "(a)")     "%%Created by Easymesh Fortran"
+  write(FU, "(a)")     "%%Created by Tripos"
   write(FU, "(a, a)")  "%%File: ", trim(eps_mesh_name)
   write(FU, "(a)")     "%%BoundingBox: (atend)"
   write(FU, "(a)")     "save"

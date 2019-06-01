@@ -8,14 +8,30 @@
 !-----------------------------------[Locals]-----------------------------------!
   character(len=CL)        :: line
   character(len=CL)        :: dumc
-  integer                  :: n, s
+  character(len=CL)        :: dom_file_name = ""
+  logical                  :: file_exists
+  integer                  :: n, len, s
   integer,         pointer :: np, ns
   type(Node_Type), pointer :: point(:)
   type(Chai_Type), pointer :: chain(:)
   type(Segm_Type), pointer :: segment(:)
 !==============================================================================!
 
-  open(FU, file = comm % problem_name)
+  ! Form file name
+  len = len_trim(comm % problem_name)
+  dom_file_name(    1:len  ) = comm % problem_name(1:len)
+  dom_file_name(len+1:len+2) = ".d"
+
+  ! Check if it exists
+  inquire(file=dom_file_name, exist=file_exists)
+  if(.not. file_exists) then
+    print *, "File: ", trim(dom_file_name), " does not exist!"
+    print *, "Exiting without generating a mesh!"
+    stop
+  end if
+
+  ! Open the file
+  open(FU, file=dom_file_name)
 
   ! Take aliases
   np      => mesh % n_point

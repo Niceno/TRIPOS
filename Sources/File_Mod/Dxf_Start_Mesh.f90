@@ -44,8 +44,8 @@
 
   ! Form file name ...
   len = len_trim(comm % problem_name)
-  dxf_mesh_name(    1:len-2) = comm % problem_name(1:len-2)
-  dxf_mesh_name(len-1:len+2) = ".dxf"
+  dxf_mesh_name(    1:len  ) = comm % problem_name(1:len)
+  dxf_mesh_name(len+1:len+4) = ".dxf"
 
   ! ... and open it
   open(unit=FU, file=dxf_mesh_name)
