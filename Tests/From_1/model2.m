@@ -5,7 +5,7 @@
 #--------------#
 
 #------------------------------------------------#
-# This is input file for Easymesh program        #
+# This is input file for TRIPOS program          #
 # for specification of material properties       #
 #                                                #
 # Everything enclosed within cashes is a comment #
