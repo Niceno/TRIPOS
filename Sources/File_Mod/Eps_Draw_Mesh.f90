@@ -9,7 +9,7 @@
   integer                  :: n, e, s, ea, eb
   real(RP)                 :: xc, yc, xd, yd, xa, ya, xb, yb
   real(RP)                 :: xi, yi, xj, yj, xk, yk, xn, yn, rad
-  character(len=CL)        :: bnd_layer, mat_layer
+  real(RP)                 :: r, g, b
   integer,         pointer :: ne, ns, nn
   type(Node_Type), pointer :: node(:)
   type(Elem_Type), pointer :: elem(:)
@@ -38,7 +38,7 @@
       ymax = max(ymax, node(n) % y)
     end if
   end do
-  scl = min( 822.0/(ymax-ymin+SMALL), 575.0/(xmax-xmin+SMALL) )
+  scl = min(1120.0/(ymax-ymin+SMALL), 800.0/(xmax-xmin+SMALL) )
 
   !-------------------!
   !   Draw elements   !
@@ -51,92 +51,102 @@
       yj = node(elem(e) % j) % y * scl
       xk = node(elem(e) % k) % x * scl
       yk = node(elem(e) % k) % y * scl
-      call File_Mod_Eps_Solid(xi, yi, xj, yj, xk, yk, elem(e) % material)
+      call File_Mod_Get_Cool_Color(elem(e) % material, r, g, b)
+      call File_Mod_Eps_Solid(xi, yi, xj, yj, xk, yk, r, g, b)
     end if
   end do
+
+  !------------------!
+  !   Draw Voronoi   !
+  !------------------!
+  if(voronoi .eq. ON) then
+    do s = 0, ns-1
+      if(side(s) % mark .ne. OFF) then
+
+        ea = side(s) % ea
+        if(ea .ne. OFF) then
+          xa = elem(ea) % xv * scl
+          ya = elem(ea) % yv * scl
+        else
+          xa = 0.5 * (node(side(s) % c) % x + node(side(s) % d) % x) * scl
+          ya = 0.5 * (node(side(s) % c) % y + node(side(s) % d) % y) * scl
+        end if
+
+        eb = side(s) % eb
+        if(eb .ne. OFF) then
+          xb = elem(eb) % xv * scl
+          yb = elem(eb) % yv * scl
+        else
+          xb = 0.5*(node(side(s) % c) % x + node(side(s) % d) % x) * scl
+          yb = 0.5*(node(side(s) % c) % y + node(side(s) % d) % y) * scl
+        end if
+
+        r = 1.0
+        g = 0.0
+        b = 1.0
+        call File_Mod_Eps_Line(0, xa, ya, xb, yb, r, g, b)  ! magenta
+
+      end if
+    end do
+  end if
+
+  !-------------------!
+  !   Draw Delaunay   !
+  !-------------------!
+  if(delaunay .eq. ON) then
+    do s = 0, ns-1
+      if(side(s) % mark .eq. 0) then  ! it means: side is in the domain */
+        xc = node(side(s) % c) % x * scl
+        yc = node(side(s) % c) % y * scl
+        xd = node(side(s) % d) % x * scl
+        yd = node(side(s) % d) % y * scl
+        r = 0.0
+        g = 0.0
+        b = 1.0
+        call File_Mod_Eps_Line(0, xc, yc, xd, yd, r, g, b)  ! blue
+      end if
+    end do
+  end if
 
   !-------------------!
   !   Draw boundary   !
   !-------------------!
   do s = 0, ns-1
-    if(side(s) % mark .gt. 0) then  ! it means, side is on the boundary */
+    if(side(s) % mark .gt. 0) then  ! it means, side is on the boundary
       xc = node(side(s) % c) % x * scl
       yc = node(side(s) % c) % y * scl
       xd = node(side(s) % d) % x * scl
       yd = node(side(s) % d) % y * scl
-      call File_Mod_Eps_Line(xc, yc, xd, yd, side(s) % mark)
+      call File_Mod_Get_Warm_Color(side(s) % mark, r, g, b)
+      call File_Mod_Eps_Line(1, xc, yc, xd, yd, r, g, b)
     end if
   end do
 
-!$   !-------------------!
-!$   !   Draw Delaunay   !
-!$   !-------------------!
-!$   if(delaunay .eq. ON) then
-!$     do s = 0, ns-1
-!$       if(side(s) % mark .eq. 0) then  ! it means: side is in the domain */
-!$         xc = node(side(s) % c) % x
-!$         yc = node(side(s) % c) % y
-!$         xd = node(side(s) % d) % x
-!$         yd = node(side(s) % d) % y
-!$         call File_Mod_Dxf_Line(xc, yc, xd, yd, "delaunay")
-!$       end if
-!$     end do
-!$   end if
+  !-------------------------!
+  !   Draw boundary nodes   !
+  !-------------------------!
 
-!$   !------------------!
-!$   !   Draw Voronoi   !
-!$   !------------------!
-!$   if(voronoi .eq. ON) then
-!$     do s = 0, ns-1
-!$       if(side(s) % mark .ne. OFF) then
-!$ 
-!$         ea = side(s) % ea
-!$         if(ea .ne. OFF) then
-!$           xa = elem(ea) % xv
-!$           ya = elem(ea) % yv
-!$         else
-!$           xa = 0.5 * (node(side(s) % c) % x + node(side(s) % d) % x)
-!$           ya = 0.5 * (node(side(s) % c) % y + node(side(s) % d) % y)
-!$         end if
-!$ 
-!$         eb = side(s) % eb
-!$         if(eb .ne. OFF) then
-!$           xb = elem(eb) % xv
-!$           yb = elem(eb) % yv
-!$         else
-!$           xb = 0.5*(node(side(s) % c) % x + node(side(s) % d) % x)
-!$           yb = 0.5*(node(side(s) % c) % y + node(side(s) % d) % y)
-!$         end if
-!$ 
-!$         call File_Mod_Dxf_Line(xa, ya, xb, yb, "voronoi")
-!$ 
-!$       end if
-!$     end do
-!$   end if
+  ! Find mesh size on the boundary
+  rad = GREAT
+  do n = 0, nn-1
+    if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary
+      rad = min(rad, node(n) % f)
+    end if
+  end do
 
-!$   !-------------------------!
-!$   !   Draw boundary nodes   !
-!$   !-------------------------!
-!$ 
-!$   ! Find mesh size on the boundary
-!$   rad = GREAT
-!$   do n = 0, nn-1
-!$     if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary */
-!$       rad = min(rad, node(n) % f)
-!$     end if
-!$   end do
-!$ 
-!$   do n = 0, nn-1
-!$     if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary */
-!$       xn  = node(n) % x
-!$       yn  = node(n) % y
-!$       write(bnd_layer(10:11), "(i2.2)") node(n) % mark
-!$       call File_Mod_Dxf_Circle(xn, yn, rad*0.4, bnd_layer(1:11))
-!$       call File_Mod_Dxf_Circle(xn, yn, rad*0.3, bnd_layer(1:11))
-!$       call File_Mod_Dxf_Circle(xn, yn, rad*0.2, bnd_layer(1:11))
-!$       call File_Mod_Dxf_Circle(xn, yn, rad*0.1, bnd_layer(1:11))
-!$     end if
-!$   end do
+  rad = rad * scl
+
+  do n = 0, nn-1
+    if(node(n) % mark .gt. 0) then  ! it means, node is on the boundary
+      xn  = node(n) % x * scl
+      yn  = node(n) % y * scl
+      call File_Mod_Get_Warm_Color(node(n) % mark, r, g, b)
+      call File_Mod_Eps_Circle(0, xn, yn, rad*0.4, r, g, b)
+      call File_Mod_Eps_Circle(0, xn, yn, rad*0.3, r, g, b)
+      call File_Mod_Eps_Circle(0, xn, yn, rad*0.2, r, g, b)
+      call File_Mod_Eps_Circle(0, xn, yn, rad*0.1, r, g, b)
+    end if
+  end do
 
   call Cpu_Timer_Mod_Stop('File_Mod_Eps_Draw_Mesh')
 

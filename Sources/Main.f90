@@ -89,7 +89,7 @@
   !   Plot eps file if requested   !
   !--------------------------------!
   if(comm % eps .eq. ON) then
-    call File_Mod_Eps_Start_Mesh(mesh, comm)
+    call File_Mod_Eps_Start_Mesh(comm)
     call File_Mod_Eps_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
     call File_Mod_Eps_End
   end if

@@ -1,12 +1,11 @@
 !==============================================================================!
-  subroutine File_Mod_Eps_Start_Mesh(mesh, comm)
+  subroutine File_Mod_Eps_Start_Mesh(comm)
 !------------------------------------------------------------------------------!
 !   Subroutine to start an .eps file.                                          !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Mesh_Type), target :: mesh
-  type(Comm_Type)         :: comm
+  type(Comm_Type) :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: len
   character(len=CL) :: eps_mesh_name = ""
