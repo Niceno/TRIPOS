@@ -86,6 +86,19 @@ DEP_LEVEL += Mesh_Mod.f90	\
              Mesh_Mod/*.f90
 $(DIR_OBJECT)/Mesh_Mod.o: $(DEP_LEVEL)
 
+DEP_LEVEL += Vector_Mod.f90	\
+             Vector_Mod/*.f90
+$(DIR_OBJECT)/Vector_Mod.o: $(DEP_LEVEL)
+
+DEP_LEVEL += Sort_Mod.f90	\
+             Matrix_Mod.f90	\
+             Matrix_Mod/*.f90
+$(DIR_OBJECT)/Matrix_Mod.o: $(DEP_LEVEL)
+
+DEP_LEVEL += Solver_Mod.f90	\
+             Solver_Mod/*.f90
+$(DIR_OBJECT)/Solver_Mod.o: $(DEP_LEVEL)
+
 DEP_LEVEL += File_Mod.f90	\
              File_Mod/*.f90
 $(DIR_OBJECT)/File_Mod.o: $(DEP_LEVEL)
