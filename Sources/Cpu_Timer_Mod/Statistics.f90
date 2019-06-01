@@ -6,7 +6,7 @@
   integer            :: f
   real(RP)           :: total_time, t_temp
   character(len=CL)  :: line, n_temp
-  integer, parameter :: I=10  ! indent
+  integer, parameter :: I=8  ! indent
   logical            :: swap
 !==============================================================================!
 
