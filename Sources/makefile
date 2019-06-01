@@ -12,10 +12,10 @@
 FC = gfortran
 
 # Directories for objects and modules. (No need to change.)
-DIR_MODULE = .Modules
-DIR_OBJECT = .Objects
+DIR_MOD = .Modules
+DIR_OBJ = .Objects
 
-OPT_COMP = -J $(DIR_MODULE) -g -Wall
+OPT_COMP = -J $(DIR_MOD) -g -Wall
 OPT_LINK = $(OPT_COMP)
 
 # Program name (This should hardly change)
@@ -47,8 +47,8 @@ SRC_FUN = Swap_Int.f90			\
 #--------------------------------------------------------
 #   List of objects generated from the list of modules
 #--------------------------------------------------------
-OBJ_MOD = $(SRC_MOD:%.f90=$(DIR_OBJECT)/%.o)
-OBJ_FUN = $(SRC_FUN:%.f90=$(DIR_OBJECT)/%.o)
+OBJ_MOD = $(SRC_MOD:%.f90=$(DIR_OBJ)/%.o)
+OBJ_FUN = $(SRC_FUN:%.f90=$(DIR_OBJ)/%.o)
 OBJ = $(OBJ_MOD) $(OBJ_FUN)
 
 #---------------------------------------------------------
@@ -56,12 +56,12 @@ OBJ = $(OBJ_MOD) $(OBJ_FUN)
 #---------------------------------------------------------
 
 # Modules
-$(DIR_OBJECT)/%.o: %.f90 %/*.f90
+$(DIR_OBJ)/%.o: %.f90 %/*.f90
 	@echo FC $<
 	@$(FC) $(OPT_COMP) -c -o $@ $<
 
 # Functions
-$(DIR_OBJECT)/%.o: %.f90
+$(DIR_OBJ)/%.o: %.f90
 	@echo FC $<
 	@$(FC) $(OPT_COMP) -c -o $@ $<
 
@@ -77,36 +77,43 @@ $(PROGRAM_FILE): $(OBJ)
 #--------------------------------------------------------------------
 #   Explicit dependencies for modules
 #--------------------------------------------------------------------
-DEP_LEVEL = Const_Mod.f90	\
-            Cpu_Timer_Mod.f90	\
-            Cpu_Timer_Mod/*.f90
-$(DIR_OBJECT)/Cpu_Timer_Mod.o: $(DEP_LEVEL)
 
-DEP_LEVEL += Mesh_Mod.f90	\
-             Mesh_Mod/*.f90
-$(DIR_OBJECT)/Mesh_Mod.o: $(DEP_LEVEL)
+# Dependecy Level Cpu_Timer
+DL_CPUT = Const_Mod.f90		\
+          Cpu_Timer_Mod.f90	\
+          Cpu_Timer_Mod/*.f90
+$(DIR_OBJ)/Cpu_Timer_Mod.o: $(DL_CPUT)
 
-DEP_LEVEL += Vector_Mod.f90	\
-             Vector_Mod/*.f90
-$(DIR_OBJECT)/Vector_Mod.o: $(DEP_LEVEL)
+# Dependecy Level Mesh
+DL_MESH = Mesh_Mod.f90		\
+          Mesh_Mod/*.f90
+$(DIR_OBJ)/Mesh_Mod.o: $(DL_CPUT) $(DL_MESH)
 
-DEP_LEVEL += Sort_Mod.f90	\
-             Matrix_Mod.f90	\
-             Matrix_Mod/*.f90
-$(DIR_OBJECT)/Matrix_Mod.o: $(DEP_LEVEL)
+# Dependecy Level Vector
+DL_VECT = Vector_Mod.f90	\
+          Vector_Mod/*.f90
+$(DIR_OBJ)/Vector_Mod.o: $(DL_CPUT) $(DL_MESH) $(DL_VECT)
 
-DEP_LEVEL += Solver_Mod.f90	\
-             Solver_Mod/*.f90
-$(DIR_OBJECT)/Solver_Mod.o: $(DEP_LEVEL)
+# Dependecy Level Matrix
+DL_MATR = Sort_Mod.f90		\
+          Matrix_Mod.f90	\
+          Matrix_Mod/*.f90
+$(DIR_OBJ)/Matrix_Mod.o: $(DL_CPUT) $(DL_MESH) $(DL_VECT) $(DL_MATR)
 
-DEP_LEVEL += File_Mod.f90	\
-             File_Mod/*.f90
-$(DIR_OBJECT)/File_Mod.o: $(DEP_LEVEL)
+# Dependecy Level Solver
+DL_SOLV = Solver_Mod.f90	\
+          Solver_Mod/*.f90
+$(DIR_OBJ)/Solver_Mod.o: $(DL_CPUT) $(DL_MESH) $(DL_VECT) $(DL_MATR) $(DL_SOLV)
 
-$(OBJ_FUN): $(DEP_LEVEL)
+# Dependecy Level File
+DL_FILE = File_Mod.f90		\
+          File_Mod/*.f90
+$(DIR_OBJ)/File_Mod.o: $(DL_CPUT) $(DL_MESH) $(DL_VECT) $(DL_FILE)
+
+$(OBJ_FUN): $(DL_CPUT) $(DL_MESH) $(DL_VECT) $(DL_MATR) $(DL_SOLV) $(DL_FILE)
 
 #---------------------
 #   Explicit target.
 #---------------------
 clean:
-	rm -f $(DIR_OBJECT)/*.o $(DIR_MODULE)/*.mod $(PROGRAM_FILE)
+	rm -f $(DIR_OBJ)/*.o $(DIR_MOD)/*.mod $(PROGRAM_FILE)
