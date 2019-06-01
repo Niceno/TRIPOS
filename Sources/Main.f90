@@ -1,5 +1,5 @@
 !==============================================================================!
-  program Easymesh
+  program Tripos
 !------------------------------------------------------------------------------!
 !           _____________________._____________________    _________           !
 !           \__    ___/\______   \   \______   \_____  \  /   _____/           !
@@ -31,7 +31,7 @@
   type(Solver_Type) :: krylov
 !==============================================================================!
 
-  call Cpu_Timer_Mod_Start('Easymesh_Main')
+  call Cpu_Timer_Mod_Start('Tripos_Main')
 
   !----------------------------------!
   !                                  !
@@ -70,9 +70,9 @@
   !-----------------------!
   call Mesh_Mod_Generate(mesh, comm)
 
-  !-----------------------------------------!
-  !   Save mesh in native Easymesh format   !
-  !-----------------------------------------!
+  !---------------------------------------!
+  !   Save mesh in native Tripos format   !
+  !---------------------------------------!
   call File_Mod_Save_Mesh(mesh, comm)
 
   !--------------------------------!
@@ -178,7 +178,7 @@
     end if
   end if
 
-  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Easymesh_Main')
+  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Tripos_Main')
   if(comm % messages .eq. ON) call Cpu_Timer_Mod_Statistics()
 
   end program
