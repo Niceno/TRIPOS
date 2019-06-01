@@ -27,6 +27,10 @@
     stop
   end if
 
+  if(comm % messages .eq. ON) then
+    write(*, "(a,a)") " Loading boundary conditions from ", trim(bnd_file_name)
+  end if
+
   ! Open the file ...
   open(FU, file=bnd_file_name)
 
@@ -34,12 +38,18 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) mesh % n_bound
 
+  if(comm % messages .eq. ON)  &
+    write(*, "(i6,a)", advance="no") mesh % n_bound, " boundary conditions "
+
   do n = 1, mesh % n_bound
     call File_Mod_Get_Useful_Line(FU, line)
     read(line, *) dumc,                     &
                   mesh % bound(n) % type,   &
                   mesh % bound(n) % value
+    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
   end do
+
+  if(comm % messages .eq. ON) write(*, *) " "
 
   close(FU)
 

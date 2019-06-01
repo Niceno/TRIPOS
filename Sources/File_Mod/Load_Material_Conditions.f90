@@ -27,6 +27,10 @@
     stop
   end if
 
+  if(comm % messages .eq. ON) then
+    write(*, "(a,a)") " Loading material conditions from ", trim(mat_file_name)
+  end if
+
   ! Open the file ...
   open(FU, file=mat_file_name)
 
@@ -34,12 +38,18 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) mesh % n_mater
 
+  if(comm % messages .eq. ON)  &
+    write(*, "(i6,a)", advance="no") mesh % n_mater, " material conditions "
+
   do n = 1, mesh % n_mater
     call File_Mod_Get_Useful_Line(FU, line)
     read(line, *) dumc,                     &
                   mesh % mater(n) % mu,     &
                   mesh % mater(n) % j
+    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
   end do
+
+  if(comm % messages .eq. ON) write(*, *) " "
 
   close(FU)
 

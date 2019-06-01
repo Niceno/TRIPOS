@@ -30,6 +30,10 @@
     stop
   end if
 
+  if(comm % messages .eq. ON) then
+    write(*, "(a,a)") " Loading domain from ", trim(dom_file_name)
+  end if
+
   ! Open the file
   open(FU, file=dom_file_name)
 
@@ -46,6 +50,8 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) np
 
+  if(comm % messages .eq. ON) write(*, "(i6,a)", advance="no") np, " points "
+
   do n = 0, np-1
     call File_Mod_Get_Useful_Line(FU, line)
     read(line, *) dumc,          &
@@ -53,6 +59,7 @@
                   point(n) % y,  &
                   point(n) % f,  &
                   point(n) % mark
+    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
 
     ! Initialize number of times it was inserted
     point(n) % inserted = 0
@@ -64,13 +71,19 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) ns
 
+  if(comm % messages .eq. ON) write(*, *) " "
+  if(comm % messages .eq. ON) write(*, "(i6,a)", advance="no") ns, " segments "
+
   do s = 0, ns-1
     call File_Mod_Get_Useful_Line(FU, line)
     read(line, *) dumc,              &
                   segment(s) % n0,   &
                   segment(s) % n1,   &
                   segment(s) % mark
+    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
   end do
+
+  if(comm % messages .eq. ON) write(*, *) " "
 
   close(FU)
 
