@@ -7,7 +7,7 @@
   call File_Mod_Logo  ! prints 12 lines
 
   print *, ""                                                             ! 13
-  print *, "Usage:  TRIPOS  <name>  [<options>]"                          ! 14
+  print *, "Usage:  Tripos  <name>  [<options>]"                          ! 14
   print *, ""                                                             ! 15
   print *, "where <name> is a problem name specified without extesions."  ! 16
   print *, ""                                                             ! 17
@@ -15,7 +15,7 @@
   print *, "generator only, or as a triangular mesh generator and solver" ! 19
   print *, "for Poisson's equation defined on the generated mesh."        ! 20
   print *, ""                                                             ! 21
-  print *, "* If TRIPOS will be used as a mesh generator only, the file"  ! 22
+  print *, "* If Tripos will be used as a mesh generator only, the file"  ! 22
   print *, "<name>.d, which describes the problem domain, has to reside"  ! 23
   print *, "in the working directory.  Its format is explained below."    ! 24
   print *, ""                                                             ! 25
@@ -24,7 +24,7 @@
   write(*, "(a)", advance = "no")  "Press ENTER to continue!";  read *
 
   print *, ""                                                             !  1
-  print *, "* If TRIPOS will be used to solve Poisson's equation after"   !  2
+  print *, "* If Tripos will be used to solve Poisson's equation after"   !  2
   print *, "generating the triangular mesh, two more files are needed:"   !  3
   print *, "<name>.b, which describes boundary conditions and"            !  4
   print *, "<name>.m, which describes material properties and sources."   !  5
@@ -56,7 +56,7 @@
   print *, "  - If you want eps output with Delaunay or Voronoi"          !  2
   print *, "    mesh only, specify D or V after +eps/+dxf option."        !  3
   print *, "    If you don't specify anything after +eps/+dxf option,"    !  4
-  print *, "    TRIPOS will draw both meshes."                            !  5
+  print *, "    Tripos will draw both meshes."                            !  5
   print *, ""                                                             !  6
   print *, "* Input for mesh generator (mandatory):"                      !  7
   print *, ""                                                             !  8
@@ -99,7 +99,7 @@
   print *, ""                                                             ! 15
   print *, "* Output"                                                     ! 16
   print *, ""                                                             ! 17
-  print *, "TRIPOS produces the following three output files:"            ! 18
+  print *, "Tripos produces the following three output files:"            ! 18
   print *, "  name.n"                                                     ! 19
   print *, "  name.e"                                                     ! 20
   print *, "  name.s"                                                     ! 21
