@@ -7,4 +7,4 @@ ifort -c Sort_Mod.f90
 ifort -c Vector_Mod.f90
 ifort -c Matrix_Mod.f90
 ifort -c Solver_Mod.f90
-ifort -o Easymesh_Fortran.exe *.obj Global\*.f90 Main.f90
+ifort -o Tripos.exe *.obj Global\*.f90 Main.f90
