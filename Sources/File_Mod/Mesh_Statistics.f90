@@ -72,16 +72,16 @@
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
   write(line( 1+L:26+L), "(a)")  "# Largest element area  : "
-  write(line(27+L:36+L), "(es10.4)") max_area
+  write(line(27+L:36+L), "(es10.3)") max_area
   print *, trim(line)
   write(line( 1+L:26+L), "(a)")  "# Smallest element area : "
-  write(line(27+L:36+L), "(es10.4)") min_area
+  write(line(27+L:36+L), "(es10.3)") min_area
   print *, trim(line)
   write(line( 1+L:26+L), "(a)")  "# Average element area  : "
-  write(line(27+L:36+L), "(es10.4)") avg_area
+  write(line(27+L:36+L), "(es10.3)") avg_area
   print *, trim(line)
   write(line( 1+L:26+L), "(a)")  "# Total domain area     : "
-  write(line(27+L:36+L), "(es10.4)") tot_area
+  write(line(27+L:36+L), "(es10.3)") tot_area
   print *, trim(line)
   line( 1+L:57+L) = "#-------------------------------------------------------#"
   print *, trim(line)
@@ -104,13 +104,13 @@
   line( 1:CL) = " ";  
   line(57+L:57+L) = "#"
   write(line( 1+L:31+L), "(a)")  "# Maximum ex/in radius ratio : "
-  write(line(32+L:41+L), "(es10.4)") max_r_rat
+  write(line(32+L:41+L), "(es10.3)") max_r_rat
   print *, trim(line)
   write(line( 1+L:31+L), "(a)")  "# Minimum ex/in radius ratio : "
-  write(line(32+L:41+L), "(es10.4)") min_r_rat
+  write(line(32+L:41+L), "(es10.3)") min_r_rat
   print *, trim(line)
   write(line( 1+L:31+L), "(a)")  "# Average ex/in radius ratio : "
-  write(line(32+L:41+L), "(es10.4)") avg_r_rat
+  write(line(32+L:41+L), "(es10.3)") avg_r_rat
   print *, trim(line)
   line( 1+L:57+L) = "#-------------------------------------------------------#"
   print *, trim(line)
