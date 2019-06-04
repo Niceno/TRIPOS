@@ -69,12 +69,21 @@
   write(FU, "(a)") "CONTINUOUS"              ! line is continuous
 
   ! Isolines (one could thing of naming them after values)
-  iso_layer(1:13) = "00:0.000E+000"
+  iso_layer(1:13) = "00_p0_00Ep000"
   do l = 0, N_ISOLINE - 1
     val = (min_val+SMALL) + l * ((max_val-min_val)-SMALL)   &
         / (N_ISOLINE-1)
+
+    ! Name layer (could be a function)
     write(iso_layer(1: 2), "(i2.2)")     l+1
-    write(iso_layer(4:13), "(es10.3e3)") val
+    write(iso_layer(4:13), "(es10.2e3)") val
+    if(val >= 0.0) iso_layer(4:4) = "p"
+    if(val <  0.0) iso_layer(4:4) = "m"
+    iso_layer(6:6)                = "_"
+    iso_layer(9:9)                = "e"
+    if(iso_layer(10:10) .eq. "+") iso_layer(10:10) = "p"
+    if(iso_layer(10:10) .eq. "-") iso_layer(10:10) = "m"
+
     write(FU, "(a)") "0"                     ! new defintion
     write(FU, "(a)") "LAYER"                 ! definition of a layer
     write(FU, "(a)") "2"                     ! layer name will follow
