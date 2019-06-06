@@ -47,6 +47,7 @@
   include 'File_Mod/Get_Cool_Color.f90'
   include 'File_Mod/Get_Warm_Color.f90'
   include 'File_Mod/Get_Rainbow_Color.f90'
+  include 'File_Mod/Name_Layer.f90'
   include 'File_Mod/Gradients.f90'
 
   end module

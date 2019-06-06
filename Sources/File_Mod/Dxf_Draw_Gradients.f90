@@ -78,7 +78,6 @@
   !------------------!
   !   Draw vectors   !
   !------------------!
-  iso_layer(1:13) = "00_p0_00Ep000"
   do e = 0, ne-1
     xv = elem(e) % xv
     yv = elem(e) % yv
@@ -86,16 +85,10 @@
     l   = ceiling(17 * mag / max_mag) - 1
     val = del_mag * 0.5 + del_mag * l
 
-    ! Name layer (could be a function)
-    write(iso_layer(1: 2), "(i2.2)")     l+1
-    write(iso_layer(4:13), "(es10.2e3)") val
-    if(val >= 0.0) iso_layer(4:4) = "p"
-    if(val <  0.0) iso_layer(4:4) = "m"
-    iso_layer(6:6)                = "_"
-    iso_layer(9:9)                = "e"
-    if(iso_layer(10:10) .eq. "+") iso_layer(10:10) = "p"
-    if(iso_layer(10:10) .eq. "-") iso_layer(10:10) = "m"
+    ! Name layer
+    call File_Mod_Name_Layer(iso_layer, l, val)
 
+    ! Draw line
     call File_Mod_Dxf_Line(xv - rad * phi_y(e) / mag,  &
                            yv + rad * phi_x(e) / mag,  &
                            xv + rad * phi_y(e) / mag,  &
