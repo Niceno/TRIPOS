@@ -57,9 +57,18 @@
       else if(argv .eq. "V") then
         comm % delaunay = OFF
         comm % voronoi  = ON
-      else
+      else if(argv .eq. "H") then
+        comm % head = ON
+      end if
+      call get_command_argument(arg+2, argv)
+      if(argv .eq. "D") then
         comm % delaunay = ON
+        comm % voronoi  = OFF
+      else if(argv .eq. "V") then
+        comm % delaunay = OFF
         comm % voronoi  = ON
+      else if(argv .eq. "H") then
+        comm % head = ON
       end if
     end if
     if(argv .eq. "-r")  comm % relax    = OFF

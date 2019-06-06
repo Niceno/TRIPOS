@@ -166,7 +166,7 @@
       call File_Mod_Dxf_End
 
       call File_Mod_Dxf_Start_Gradients(phi, comm)
-      call File_Mod_Dxf_Draw_Gradients(phi)
+      call File_Mod_Dxf_Draw_Gradients(phi, comm)
       call File_Mod_Dxf_End
     end if
 
@@ -179,7 +179,7 @@
       call File_Mod_Eps_End
 
       call File_Mod_Eps_Start_Gradients(comm)
-      call File_Mod_Eps_Draw_Gradients(phi)
+      call File_Mod_Eps_Draw_Gradients(phi, comm)
       call File_Mod_Eps_End
     end if
   end if

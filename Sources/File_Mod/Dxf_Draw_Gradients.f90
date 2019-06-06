@@ -1,15 +1,16 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Draw_Gradients(phi)
+  subroutine File_Mod_Dxf_Draw_Gradients(phi, comm)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Vector_Type), target :: phi
+  type(Comm_Type)           :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, s, l, n
   real(RP)                 :: xc, yc, xd, yd
-  real(RP)                 :: xv, yv
+  real(RP)                 :: xv, yv, dx, dy
   real(RP)                 :: val, max_mag, del_mag, mag, rad
-  character(len=CL)        :: iso_layer
+  character(len=CL)        :: il
   integer,         pointer :: nn, ne, ns
   type(Mesh_Type), pointer :: mesh
   type(Node_Type), pointer :: node(:)
@@ -86,14 +87,39 @@
     val = del_mag * 0.5 + del_mag * l
 
     ! Name layer
-    call File_Mod_Name_Layer(iso_layer, l, val)
+    call File_Mod_Name_Layer(il, l, val)
+
+    dx = +rad * phi_y(e) / mag
+    dy = -rad * phi_x(e) / mag
 
     ! Draw line
-    call File_Mod_Dxf_Line(xv - rad * phi_y(e) / mag,  &
-                           yv + rad * phi_x(e) / mag,  &
-                           xv + rad * phi_y(e) / mag,  &
-                           yv - rad * phi_x(e) / mag,  &
-                           iso_layer(1:13))
+    if(comm % head .eq. ON) then
+      call File_Mod_Dxf_Line(xv-dx,              &
+                             yv-dy,              &
+                             xv+0.5*dx,          &
+                             yv+0.5*dy,             il(1:13))
+      call File_Mod_Dxf_Line(xv+0.5*dx,          &
+                             yv+0.5*dy,          &
+                             xv+0.5*dx+0.25*dy,  &
+                             yv+0.5*dy-0.25*dx,     il(1:13))
+      call File_Mod_Dxf_Line(xv+0.5*dx,          &
+                             yv+0.5*dy,          &
+                             xv+0.5*dx-0.25*dy,  &
+                             yv+0.5*dy+0.25*dx,     il(1:13))
+      call File_Mod_Dxf_Line(xv+dx,              &
+                             yv+dy,              &
+                             xv+0.5*dx+0.25*dy,  &
+                             yv+0.5*dy-0.25*dx,     il(1:13))
+      call File_Mod_Dxf_Line(xv+dx,              &
+                             yv+dy,              &
+                             xv+0.5*dx-0.25*dy,  &
+                             yv+0.5*dy+0.25*dx,     il(1:13))
+    else
+      call File_Mod_Dxf_Line(xv-dx,              &
+                             yv-dy,              &
+                             xv+dx,              &
+                             yv+dy,                 il(1:13))
+    end if
   end do
 
   call Cpu_Timer_Mod_Stop('File_Mod_Dxf_Draw_Gradients')

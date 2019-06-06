@@ -21,8 +21,9 @@
     integer  :: smooth    = ON     ! perform smoothing
     integer  :: dxf       = OFF    ! don't create DXF file
     integer  :: eps       = OFF    ! don't create EPS file
-    integer  :: delaunay  = OFF    ! don't draw Delaunay mesh in plots
-    integer  :: voronoi   = OFF    ! don't draw Voronoi mesh in plots
+    integer  :: delaunay  = ON     ! don't draw Delaunay mesh in plots
+    integer  :: voronoi   = ON     ! don't draw Voronoi mesh in plots
+    integer  :: head      = OFF    ! don't draw arrow heads
     integer  :: solve     = OFF    ! solve Poisson equation
     real(RP) :: r_tol     = 0.7    ! adjusts level of aggresivity
   end type

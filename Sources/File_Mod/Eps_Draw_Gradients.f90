@@ -1,12 +1,13 @@
 !==============================================================================!
-  subroutine File_Mod_Eps_Draw_Gradients(phi)
+  subroutine File_Mod_Eps_Draw_Gradients(phi, comm)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Vector_Type), target :: phi
+  type(Comm_Type)           :: comm
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: n, e, s, l
-  real(RP)                 :: xc, yc, xd, yd, xv, yv
+  real(RP)                 :: xc, yc, xd, yd, xv, yv, dx, dy
   real(RP)                 :: max_mag, rad, mag
   real(RP)                 :: r, g, b
   integer,         pointer :: ne, ns, nn
@@ -88,11 +89,37 @@
     mag = sqrt(phi_x(e)**2 + phi_y(e)**2)
     l = ceiling(17 * mag / max_mag) - 1
     call File_Mod_Get_Rainbow_Color(l, r, g, b)
-    call File_Mod_Eps_Line(0, xv * scl - rad * phi_y(e) / mag,  &
-                              yv * scl + rad * phi_x(e) / mag,  &
-                              xv * scl + rad * phi_y(e) / mag,  &
-                              yv * scl - rad * phi_x(e) / mag,  &
-                              r, g, b)
+
+    dx = +rad * phi_y(e) / mag
+    dy = -rad * phi_x(e) / mag
+
+    if(comm % head .eq. ON) then
+      call File_Mod_Eps_Line(0, xv*scl-dx,              &
+                                yv*scl-dy,              &
+                                xv*scl+0.5*dx,          &
+                                yv*scl+0.5*dy,             r, g, b)
+      call File_Mod_Eps_Line(0, xv*scl+0.5*dx,          &
+                                yv*scl+0.5*dy,          &
+                                xv*scl+0.5*dx+0.25*dy,  &
+                                yv*scl+0.5*dy-0.25*dx,     r, g, b)
+      call File_Mod_Eps_Line(0, xv*scl+0.5*dx,          &
+                                yv*scl+0.5*dy,          &
+                                xv*scl+0.5*dx-0.25*dy,  &
+                                yv*scl+0.5*dy+0.25*dx,     r, g, b)
+      call File_Mod_Eps_Line(0, xv*scl+dx,              &
+                                yv*scl+dy,              &
+                                xv*scl+0.5*dx+0.25*dy,  &
+                                yv*scl+0.5*dy-0.25*dx,     r, g, b)
+      call File_Mod_Eps_Line(0, xv*scl+dx,              &
+                                yv*scl+dy,              &
+                                xv*scl+0.5*dx-0.25*dy,  &
+                                yv*scl+0.5*dy+0.25*dx,     r, g, b)
+    else
+      call File_Mod_Eps_Line(0, xv*scl-dx,              &
+                                yv*scl-dy,              &
+                                xv*scl+dx,              &
+                                yv*scl+dy,                 r, g, b)
+    end if
   end do
 
   call Cpu_Timer_Mod_Stop('File_Mod_Eps_Draw_Gradients')
