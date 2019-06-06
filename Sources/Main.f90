@@ -21,12 +21,10 @@
 !-----------------------------------[Locals]-----------------------------------!
   type(Comm_Type)   :: comm
   type(Mesh_Type)   :: mesh
-
-  ! Variables relevant for solvers
   integer           :: max_it, act_it, i
   real(RP)          :: dt = 0.1, f_res, t_res = 1.0e-6
   type(Matrix_Type) :: a
-  type(Vector_Type) :: x, x_o
+  type(Vector_Type) :: phi, phi_o
   type(Vector_Type) :: b
   type(Solver_Type) :: krylov
 !==============================================================================!
@@ -115,8 +113,8 @@
     !--------------------------!
     call Solver_Mod_Allocate(krylov, mesh)
     call Matrix_Mod_Allocate(a,   mesh)
-    call Vector_Mod_Allocate(x,   mesh)
-    call Vector_Mod_Allocate(x_o, mesh)
+    call Vector_Mod_Allocate(phi,   mesh)
+    call Vector_Mod_Allocate(phi_o, mesh)
     call Vector_Mod_Allocate(b,   mesh)
 
     !---------------------------------------!
@@ -137,14 +135,14 @@
       end if
 
       ! Actual value becomes old
-      x_o % val(:) = x % val(:)
+      phi_o % val(:) = phi % val(:)
 
       ! Discretize linear system and update r.h.s.
-      call Discretize(a, x_o, b, dt)
+      call Discretize(a, phi_o, b, dt)
 
       ! Cal linear solver
-      ! call Solver_Mod_Bicg(krylov, a, x, b, max_it, act_it, t_res, f_res)
-      call Solver_Mod_Cg(krylov, a, x, b, max_it, act_it, t_res, f_res)
+      ! call Solver_Mod_Bicg(krylov, a, phi, b, max_it, act_it, t_res, f_res)
+      call Solver_Mod_Cg(krylov, a, phi, b, max_it, act_it, t_res, f_res)
 
       ! Gradually increase time step, you want steady solution anyway
       dt = dt * 1.2
@@ -163,8 +161,12 @@
     !   Plot results in DXF file format   !
     !-------------------------------------!
     if(comm % dxf .eq. ON) then
-      call File_Mod_Dxf_Start_Results(x, comm)
-      call File_Mod_Dxf_Draw_Results(x)
+      call File_Mod_Dxf_Start_Results(phi, comm)
+      call File_Mod_Dxf_Draw_Results(phi)
+      call File_Mod_Dxf_End
+
+      call File_Mod_Dxf_Start_Gradients(phi, comm)
+      call File_Mod_Dxf_Draw_Gradients(phi)
       call File_Mod_Dxf_End
     end if
 
@@ -173,7 +175,11 @@
     !-------------------------------------!
     if(comm % eps .eq. ON) then
       call File_Mod_Eps_Start_Results(comm)
-      call File_Mod_Eps_Draw_Results(x)
+      call File_Mod_Eps_Draw_Results(phi)
+      call File_Mod_Eps_End
+
+      call File_Mod_Eps_Start_Gradients(comm)
+      call File_Mod_Eps_Draw_Gradients(phi)
       call File_Mod_Eps_End
     end if
   end if
