@@ -78,8 +78,8 @@
     write(FU, "(a)") "70"                      ! flags
     write(FU, "(a)") "64"                      ! 64 means it is referenced later
     write(FU, "(a)") "62"                      ! color definition
-    if(l .eq. 1) write(FU, "(a)") "5"          ! layer name
-    if(l .eq. 2) write(FU, "(a)") "6"          ! layer name
+    if(l .eq. 1) write(FU, "(a)") "5"          ! layer color
+    if(l .eq. 2) write(FU, "(a)") "6"          ! layer color
     write(FU, "(a)") "6"                       ! line type (educated guess)
     write(FU, "(a)") "CONTINUOUS"              ! line is continuous
   end do

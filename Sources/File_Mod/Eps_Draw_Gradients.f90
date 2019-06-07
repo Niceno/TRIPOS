@@ -39,22 +39,6 @@
     max_mag = max(max_mag, sqrt(phi_x(e)**2 + phi_y(e)**2))
   end do
 
-  !------------------------!
-  !   Draw Delaunay mesh   !
-  !------------------------!
-  do s = 0, ns-1
-    if(side(s) % mark .eq. 0) then  ! it means: side is in the domain */
-      xc = node(side(s) % c) % x * scl
-      yc = node(side(s) % c) % y * scl
-      xd = node(side(s) % d) % x * scl
-      yd = node(side(s) % d) % y * scl
-      r = 0.7
-      g = 0.7
-      b = 0.7
-      call File_Mod_Eps_Line(0, xc, yc, xd, yd, r, g, b)  ! blue
-    end if
-  end do
-
   !-------------------!
   !   Draw boundary   !
   !-------------------!

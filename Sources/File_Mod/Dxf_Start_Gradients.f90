@@ -62,23 +62,11 @@
   write(FU, "(a)") "70"        ! layer type flags to be defined
   write(FU, "(a)") "6"         ! and they are 2 + 4 (frozen + locked)
 
-  ! Mesh (Delaunay)
-  write(FU, "(a)") "0"                       ! new defintion
-  write(FU, "(a)") "LAYER"                   ! definition of a layer
-  write(FU, "(a)") "2"                       ! layer name will follow
-  write(FU, "(a)") "mesh"                    ! layer name
-  write(FU, "(a)") "70"                      ! flags
-  write(FU, "(a)") "64"                      ! 64 means it is referenced later
-  write(FU, "(a)") "62"                      ! color definition
-  write(FU, "(a)") "8"                       ! color (8 is dark gray; 9 is gray)
-  write(FU, "(a)") "6"                       ! line type (educated guess)
-  write(FU, "(a)") "CONTINUOUS"              ! line is continuous
-
   ! Boundary
   write(FU, "(a)") "0"                       ! new defintion
   write(FU, "(a)") "LAYER"                   ! definition of a layer
   write(FU, "(a)") "2"                       ! layer name will follow
-  write(FU, "(a)") "mesh"                    ! layer name
+  write(FU, "(a)") "boundary"                ! layer name
   write(FU, "(a)") "70"                      ! flags
   write(FU, "(a)") "64"                      ! 64 means it is referenced later
   write(FU, "(a)") "62"                      ! color definition

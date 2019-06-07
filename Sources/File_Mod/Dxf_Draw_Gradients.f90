@@ -41,19 +41,6 @@
   end do
   del_mag = max_mag / N_ISOLINE
 
-  !------------------------!
-  !   Draw Delaunay mesh   !
-  !------------------------!
-  do s = 0, ns-1
-    if(side(s) % mark .eq. 0) then  ! it means: side is in the domain */
-      xc = node(side(s) % c) % x
-      yc = node(side(s) % c) % y
-      xd = node(side(s) % d) % x
-      yd = node(side(s) % d) % y
-      call File_Mod_Dxf_Line(xc, yc, xd, yd, "mesh")
-    end if
-  end do
-
   !-------------------!
   !   Draw boundary   !
   !-------------------!

@@ -60,7 +60,7 @@
   write(FU, "(a)") "0"                       ! new defintion
   write(FU, "(a)") "LAYER"                   ! definition of a layer
   write(FU, "(a)") "2"                       ! layer name will follow
-  write(FU, "(a)") "mesh"                    ! layer name
+  write(FU, "(a)") "boundary"                ! layer name
   write(FU, "(a)") "70"                      ! flags
   write(FU, "(a)") "64"                      ! 64 means it is referenced later
   write(FU, "(a)") "62"                      ! color definition
