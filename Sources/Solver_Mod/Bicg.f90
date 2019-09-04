@@ -43,13 +43,13 @@
   !---------------------!
   !   Preconditioning   !
   !---------------------!
-  call Prec_Form(ni, a, d)
+  call Solver_Mod_Prec_Form(ni, a, d)
 
   !-----------------------------------!
   !    This is quite tricky point.    !
   !   What if bnrm2 is very small ?   !
   !-----------------------------------!
-  bnrm2 = Root_Mean_Square(ni, b)
+  bnrm2 = Solver_Mod_Root_Mean_Square(ni, b)
 
   if(bnrm2 < tol) then
     iter = 0
@@ -59,12 +59,12 @@
   !----------------!
   !   r = b - Ax   !
   !----------------!
-  call Residual_Vector(ni, r1, b, a, x)
+  call Solver_Mod_Residual_Vector(ni, r1, b, a, x)
 
   !--------------------------------!
   !   Calculate initial residual   !
   !--------------------------------!
-  res = Root_Mean_Square(ni, r1)
+  res = Solver_Mod_Root_Mean_Square(ni, r1)
 
   if(res < tol) then
     iter = 0
@@ -88,8 +88,8 @@
     !    solve M^T z~ = r~   !  don't have M^T!!!
     !    (q instead of z)    !
     !------------------------!
-    call Prec_Solve(ni, a, d, q1, r1)
-    call Prec_Solve(ni, a, d, q2, r2)
+    call Solver_Mod_Prec_Solve(ni, a, d, q1, r1)
+    call Solver_Mod_Prec_Solve(ni, a, d, q2, r2)
 
     !------------------!
     !   rho = (z,r~)   !
@@ -138,7 +138,7 @@
     !-----------------------!
     !   Check convergence   !
     !-----------------------!
-    res = Root_Mean_Square(ni, r1)
+    res = Solver_Mod_Root_Mean_Square(ni, r1)
 
     if(res < tol) goto 1
 

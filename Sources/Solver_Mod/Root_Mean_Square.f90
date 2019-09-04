@@ -1,5 +1,5 @@
 !==============================================================================!
-  real(RP) function Root_Mean_Square(ni, r)
+  real(RP) function Solver_Mod_Root_Mean_Square(ni, r)
 !------------------------------------------------------------------------------!
 !   Calculates root means square of vector r without normalization.            !
 !------------------------------------------------------------------------------!
@@ -19,6 +19,6 @@
   end do
   rms = sqrt(rms)
 
-  Root_Mean_Square = rms
+  Solver_Mod_Root_Mean_Square = rms
 
   end function
