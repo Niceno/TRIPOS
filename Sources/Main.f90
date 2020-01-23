@@ -39,7 +39,7 @@
 
   ! Some command line arguments were specified; parse them!
   else
-    call Parse_Command_Line(opts)
+    call Options_Mod_Parse_Command_Line(opts)
   end if  ! some command arguments were passed
 
   ! If user wanted to create an example, do it an exit
@@ -56,7 +56,7 @@
   !-----------------------------------------!
   if(opts % messages .eq. ON) call File_Mod_Logo
   call File_Mod_Load_Domain(mesh, opts)   ! load the domain file
-  call Setup_Chains(mesh)                 ! set the domain up
+  call Mesh_Mod_Setup_Chains(mesh)        ! set the domain up
 
   !-----------------------!
   !   Generate the mesh   !

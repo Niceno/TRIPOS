@@ -122,6 +122,7 @@
   include 'Mesh_Mod/Generate.f90'
   include 'Mesh_Mod/New_Node.f90'
   include 'Mesh_Mod/Renumber.f90'
+  include 'Mesh_Mod/Setup_Chains.f90'
   include 'Mesh_Mod/Materials.f90'
   include 'Mesh_Mod/Swap_Side.f90'
   include 'Mesh_Mod/Neighbours.f90'

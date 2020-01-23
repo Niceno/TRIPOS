@@ -38,10 +38,9 @@ SRC_MOD += Const_Mod.f90	\
            Solver_Mod.f90	\
            File_Mod.f90
 
-SRC_FUN = Swap_Int.f90			\
-          Setup_Chains.f90		\
-          Discretize.f90		\
-          Parse_Command_Line.f90	\
+# Global functions
+SRC_FUN = Swap_Int.f90		\
+          Discretize.f90	\
           Main.f90
 
 #--------------------------------------------------------

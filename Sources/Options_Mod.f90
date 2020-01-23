@@ -28,4 +28,8 @@
     real(RP) :: r_tol     = 0.7    ! adjusts level of aggresivity
   end type
 
+  contains
+
+  include 'Options_Mod/Parse_Command_Line.f90'
+
   end module
