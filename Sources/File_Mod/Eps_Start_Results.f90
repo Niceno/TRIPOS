@@ -1,21 +1,21 @@
 !==============================================================================!
-  subroutine File_Mod_Eps_Start_Results(comm)
+  subroutine File_Mod_Eps_Start_Results(opts)
 !------------------------------------------------------------------------------!
 !   Subroutine to start an .eps file.                                          !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Comm_Type) :: comm
+  type(Options_Type) :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: len
   character(len=CL) :: eps_results_name = ""
 !==============================================================================!
 
-  if(comm % messages .eq. ON) print *, "Plotting the results in eps format"
+  if(opts % messages .eq. ON) print *, "Plotting the results in eps format"
 
   ! Form file name ...
-  len = len_trim(comm % problem_name)
-  eps_results_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  eps_results_name(    1:len  ) = opts % problem_name(1:len)
   eps_results_name(len+1:len+6) = ".r.eps"
 
   ! ... and open it

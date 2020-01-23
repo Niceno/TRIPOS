@@ -1,10 +1,10 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Draw_Gradients(phi, comm)
+  subroutine File_Mod_Dxf_Draw_Gradients(phi, opts)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
   type(Vector_Type), target :: phi
-  type(Comm_Type)           :: comm
+  type(Options_Type)        :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, s, l, n
   real(RP)                 :: xc, yc, xd, yd
@@ -80,7 +80,7 @@
     dy = -rad * phi_x(e) / mag
 
     ! Draw line
-    if(comm % head .eq. ON) then
+    if(opts % head .eq. ON) then
       call File_Mod_Dxf_Line(xv-dx,              &
                              yv-dy,              &
                              xv+0.5*dx,          &

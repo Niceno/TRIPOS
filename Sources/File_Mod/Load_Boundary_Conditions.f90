@@ -1,10 +1,10 @@
 !==============================================================================!
-  subroutine File_Mod_Load_Boundary_Conditions(mesh, comm)
+  subroutine File_Mod_Load_Boundary_Conditions(mesh, opts)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Mesh_Type), target :: mesh
-  type(Comm_Type), target :: comm
+  type(Mesh_Type),    target :: mesh
+  type(Options_Type), target :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: n, len
   logical           :: file_exists
@@ -14,8 +14,8 @@
 !==============================================================================!
 
   ! Form file name
-  len = len_trim(comm % problem_name)
-  bnd_file_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  bnd_file_name(    1:len  ) = opts % problem_name(1:len)
   bnd_file_name(len+1:len+2) = ".b"
 
   ! Check if it exists
@@ -27,7 +27,7 @@
     stop
   end if
 
-  if(comm % messages .eq. ON) then
+  if(opts % messages .eq. ON) then
     write(*, "(a,a)") " Loading boundary conditions from ", trim(bnd_file_name)
   end if
 
@@ -38,7 +38,7 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) mesh % n_bound
 
-  if(comm % messages .eq. ON)  &
+  if(opts % messages .eq. ON)  &
     write(*, "(i6,a)", advance="no") mesh % n_bound, " boundary conditions "
 
   do n = 1, mesh % n_bound
@@ -46,10 +46,10 @@
     read(line, *) dumc,                     &
                   mesh % bound(n) % type,   &
                   mesh % bound(n) % value
-    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
+    if(opts % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
   end do
 
-  if(comm % messages .eq. ON) write(*, *) " "
+  if(opts % messages .eq. ON) write(*, *) " "
 
   close(FU)
 

@@ -1,13 +1,13 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Start_Results(solution, comm)
+  subroutine File_Mod_Dxf_Start_Results(solution, opts)
 !------------------------------------------------------------------------------!
 !   Subroutine to start a .dxf file.                                           !
 !   Note: DXF color codes are described here: http://gohtx.com/acadcolors.php  !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Vector_Type), target :: solution
-  type(Comm_Type)           :: comm
+  type(Vector_Type),  target :: solution
+  type(Options_Type)         :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: l, len
   character(len=CL) :: iso_layer
@@ -19,8 +19,8 @@
   min_val = minval(solution % val(:))
 
   ! Form file name
-  len = len_trim(comm % problem_name)
-  dxf_results_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  dxf_results_name(    1:len  ) = opts % problem_name(1:len)
   dxf_results_name(len+1:len+6) = ".r.dxf"
 
   ! ... and open it

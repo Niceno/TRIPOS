@@ -1,10 +1,10 @@
 !==============================================================================!
-  subroutine File_Mod_Eps_Draw_Gradients(phi, comm)
+  subroutine File_Mod_Eps_Draw_Gradients(phi, opts)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Vector_Type), target :: phi
-  type(Comm_Type)           :: comm
+  type(Vector_Type),  target :: phi
+  type(Options_Type)         :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: n, e, s, l
   real(RP)                 :: xc, yc, xd, yd, xv, yv, dx, dy
@@ -77,7 +77,7 @@
     dx = +rad * phi_y(e) / mag
     dy = -rad * phi_x(e) / mag
 
-    if(comm % head .eq. ON) then
+    if(opts % head .eq. ON) then
       call File_Mod_Eps_Line(0, xv*scl-dx,              &
                                 yv*scl-dy,              &
                                 xv*scl+0.5*dx,          &

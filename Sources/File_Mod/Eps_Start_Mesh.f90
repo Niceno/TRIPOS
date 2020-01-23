@@ -1,21 +1,21 @@
 !==============================================================================!
-  subroutine File_Mod_Eps_Start_Mesh(comm)
+  subroutine File_Mod_Eps_Start_Mesh(opts)
 !------------------------------------------------------------------------------!
 !   Subroutine to start an .eps file.                                          !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Comm_Type) :: comm
+  type(Options_Type) :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: len
   character(len=CL) :: eps_mesh_name = ""
 !==============================================================================!
 
-  if(comm % messages .eq. ON) print *, "Plotting the mesh in eps format"
+  if(opts % messages .eq. ON) print *, "Plotting the mesh in eps format"
 
   ! Form file name ...
-  len = len_trim(comm % problem_name)
-  eps_mesh_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  eps_mesh_name(    1:len  ) = opts % problem_name(1:len)
   eps_mesh_name(len+1:len+4) = ".eps"
 
   ! ... and open it

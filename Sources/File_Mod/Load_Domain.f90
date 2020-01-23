@@ -1,10 +1,10 @@
 !==============================================================================!
-  subroutine File_Mod_Load_Domain(mesh, comm)
+  subroutine File_Mod_Load_Domain(mesh, opts)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Mesh_Type), target :: mesh
-  type(Comm_Type), target :: comm
+  type(Mesh_Type),    target :: mesh
+  type(Options_Type), target :: opts
 !-----------------------------------[Locals]-----------------------------------!
   character(len=CL)        :: line
   character(len=CL)        :: dumc
@@ -18,8 +18,8 @@
 !==============================================================================!
 
   ! Form file name
-  len = len_trim(comm % problem_name)
-  dom_file_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  dom_file_name(    1:len  ) = opts % problem_name(1:len)
   dom_file_name(len+1:len+2) = ".d"
 
   ! Check if it exists
@@ -30,7 +30,7 @@
     stop
   end if
 
-  if(comm % messages .eq. ON) then
+  if(opts % messages .eq. ON) then
     write(*, "(a,a)") " Loading domain from ", trim(dom_file_name)
   end if
 
@@ -50,7 +50,7 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) np
 
-  if(comm % messages .eq. ON) write(*, "(i6,a)", advance="no") np, " points "
+  if(opts % messages .eq. ON) write(*, "(i6,a)", advance="no") np, " points "
 
   do n = 0, np-1
     call File_Mod_Get_Useful_Line(FU, line)
@@ -59,7 +59,7 @@
                   point(n) % y,  &
                   point(n) % f,  &
                   point(n) % mark
-    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
+    if(opts % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
 
     ! Initialize number of times it was inserted
     point(n) % inserted = 0
@@ -71,8 +71,8 @@
   call File_Mod_Get_Useful_Line(FU, line)
   read(line, *) ns
 
-  if(comm % messages .eq. ON) write(*, *) " "
-  if(comm % messages .eq. ON) write(*, "(i6,a)", advance="no") ns, " segments "
+  if(opts % messages .eq. ON) write(*, *) " "
+  if(opts % messages .eq. ON) write(*, "(i6,a)", advance="no") ns, " segments "
 
   do s = 0, ns-1
     call File_Mod_Get_Useful_Line(FU, line)
@@ -80,10 +80,10 @@
                   segment(s) % n0,   &
                   segment(s) % n1,   &
                   segment(s) % mark
-    if(comm % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
+    if(opts % messages .eq. ON) write(*, "(a,a)", advance="no") trim(dumc), " "
   end do
 
-  if(comm % messages .eq. ON) write(*, *) " "
+  if(opts % messages .eq. ON) write(*, *) " "
 
   close(FU)
 

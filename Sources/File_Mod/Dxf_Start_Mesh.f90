@@ -1,13 +1,13 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Start_Mesh(mesh, comm)
+  subroutine File_Mod_Dxf_Start_Mesh(mesh, opts)
 !------------------------------------------------------------------------------!
 !   Subroutine to start a .dxf file.                                           !
 !   Note: DXF color codes are described here: http://gohtx.com/acadcolors.php  !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Mesh_Type), target :: mesh
-  type(Comm_Type)         :: comm
+  type(Mesh_Type),    target :: mesh
+  type(Options_Type)         :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, l, s
   integer                  :: max_bnd, max_mat, len
@@ -18,7 +18,7 @@
   type(Side_Type), pointer :: side(:)
 !==============================================================================!
 
-  if(comm % messages .eq. ON) print *, "Plotting the mesh in dfx format"
+  if(opts % messages .eq. ON) print *, "Plotting the mesh in dfx format"
 
   ! Take aliases
   ne   => mesh % n_elem
@@ -43,8 +43,8 @@
   end do
 
   ! Form file name ...
-  len = len_trim(comm % problem_name)
-  dxf_mesh_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  dxf_mesh_name(    1:len  ) = opts % problem_name(1:len)
   dxf_mesh_name(len+1:len+4) = ".dxf"
 
   ! ... and open it

@@ -1,10 +1,10 @@
 !==============================================================================!
-  subroutine File_Mod_Save_Mesh(mesh, comm)
+  subroutine File_Mod_Save_Mesh(mesh, opts)
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Mesh_Type), target :: mesh
-  type(Comm_Type)         :: comm
+  type(Mesh_Type),    target :: mesh
+  type(Options_Type)         :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: e, s, n
   integer                  :: nf, len
@@ -17,7 +17,7 @@
 
   call Cpu_Timer_Mod_Start('File_Mod_Save_Mesh')
 
-  if(comm % messages .eq. ON) print *, "Saving the mesh"
+  if(opts % messages .eq. ON) print *, "Saving the mesh"
 
   ! Take aliases
   nn   => mesh % n_node
@@ -32,9 +32,9 @@
   !   Node data   !
   !---------------!
 
-  ! Form file name and open it (bad practice to fiddle comm variable here)
-  len = len_trim(comm % problem_name)
-  file_name(    1:len  ) = comm % problem_name(1:len)
+  ! Form file name and open it (bad practice to fiddle opts variable here)
+  len = len_trim(opts % problem_name)
+  file_name(    1:len  ) = opts % problem_name(1:len)
   file_name(len+1:len+2) = ".n"
   open(unit=FU, file=file_name)
 
@@ -54,8 +54,8 @@
   !------------------!
 
   ! Form file name and open it
-  len = len_trim(comm % problem_name)
-  file_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  file_name(    1:len  ) = opts % problem_name(1:len)
   file_name(len+1:len+2) = ".e"
   open(unit=FU, file=file_name)
 
@@ -82,8 +82,8 @@
   !---------------!
 
   ! Form file name and open it
-  len = len_trim(comm % problem_name)
-  file_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  file_name(    1:len  ) = opts % problem_name(1:len)
   file_name(len+1:len+2) = ".s"
   open(unit=FU, file=file_name)
 

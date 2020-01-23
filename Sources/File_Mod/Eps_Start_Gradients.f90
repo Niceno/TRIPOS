@@ -1,21 +1,21 @@
 !==============================================================================!
-  subroutine File_Mod_Eps_Start_Gradients(comm)
+  subroutine File_Mod_Eps_Start_Gradients(opts)
 !------------------------------------------------------------------------------!
 !   Subroutine to start an .eps file for plotting gradients.                   !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Comm_Type) :: comm
+  type(Options_Type) :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer           :: len
   character(len=CL) :: eps_gradients_name = ""
 !==============================================================================!
 
-  if(comm % messages .eq. ON) print *, "Plotting the gradients in eps format"
+  if(opts % messages .eq. ON) print *, "Plotting the gradients in eps format"
 
   ! Form file name ...
-  len = len_trim(comm % problem_name)
-  eps_gradients_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  eps_gradients_name(    1:len  ) = opts % problem_name(1:len)
   eps_gradients_name(len+1:len+6) = ".g.eps"
 
   ! ... and open it

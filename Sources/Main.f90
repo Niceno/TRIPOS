@@ -10,7 +10,7 @@
 !------------------------------------------------------------------------------!
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod
-  use Comm_Mod
+  use Options_Mod
   use File_Mod
   use Vector_Mod
   use Matrix_Mod
@@ -19,14 +19,14 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  type(Comm_Type)   :: comm
-  type(Mesh_Type)   :: mesh
-  integer           :: max_it, act_it, i
-  real(RP)          :: dt = 0.1, f_res, t_res = 1.0e-6
-  type(Matrix_Type) :: a
-  type(Vector_Type) :: phi, phi_o
-  type(Vector_Type) :: b
-  type(Solver_Type) :: krylov
+  type(Options_Type) :: opts
+  type(Mesh_Type)    :: mesh
+  integer            :: max_it, act_it, i
+  real(RP)           :: dt = 0.1, f_res, t_res = 1.0e-6
+  type(Matrix_Type)  :: a
+  type(Vector_Type)  :: phi, phi_o
+  type(Vector_Type)  :: b
+  type(Solver_Type)  :: krylov
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Tripos_Main')
@@ -44,11 +44,11 @@
 
   ! Some command line arguments were specified; parse them!
   else
-    call Parse_Command_Line(comm)
+    call Parse_Command_Line(opts)
   end if  ! some command arguments were passed
 
   ! If user wanted to create an example, do it an exit
-  if(comm % example .eq. ON) then
+  if(opts % example .eq. ON) then
     call File_Mod_Example
     stop
   end if
@@ -59,42 +59,42 @@
   !      mesh generation can now start      !
   !                                         !
   !-----------------------------------------!
-  if(comm % messages .eq. ON) call File_Mod_Logo
-  call File_Mod_Load_Domain(mesh, comm)   ! load the domain file
+  if(opts % messages .eq. ON) call File_Mod_Logo
+  call File_Mod_Load_Domain(mesh, opts)   ! load the domain file
   call Setup_Chains(mesh)                 ! set the domain up
 
   !-----------------------!
   !   Generate the mesh   !
   !-----------------------!
-  call Mesh_Mod_Generate(mesh, comm)
+  call Mesh_Mod_Generate(mesh, opts)
 
   !---------------------------------------!
   !   Save mesh in native Tripos format   !
   !---------------------------------------!
-  call File_Mod_Save_Mesh(mesh, comm)
+  call File_Mod_Save_Mesh(mesh, opts)
 
   !--------------------------------!
   !   Plot dxf file if requested   !
   !--------------------------------!
-  if(comm % dxf .eq. ON) then
-    call File_Mod_Dxf_Start_Mesh(mesh, comm)
-    call File_Mod_Dxf_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
+  if(opts % dxf .eq. ON) then
+    call File_Mod_Dxf_Start_Mesh(mesh, opts)
+    call File_Mod_Dxf_Draw_Mesh(mesh, opts % delaunay, opts % voronoi)
     call File_Mod_Dxf_End
   end if
 
   !--------------------------------!
   !   Plot eps file if requested   !
   !--------------------------------!
-  if(comm % eps .eq. ON) then
-    call File_Mod_Eps_Start_Mesh(comm)
-    call File_Mod_Eps_Draw_Mesh(mesh, comm % delaunay, comm % voronoi)
+  if(opts % eps .eq. ON) then
+    call File_Mod_Eps_Start_Mesh(opts)
+    call File_Mod_Eps_Draw_Mesh(mesh, opts % delaunay, opts % voronoi)
     call File_Mod_Eps_End
   end if
 
-  if(comm % messages .eq. ON) print *, "Done!"
+  if(opts % messages .eq. ON) print *, "Done!"
 
-  if(comm % messages .eq. ON) print *, ""
-  if(comm % messages .eq. ON) call File_Mod_Mesh_Statistics(mesh)
+  if(opts % messages .eq. ON) print *, ""
+  if(opts % messages .eq. ON) call File_Mod_Mesh_Statistics(mesh)
 
   !-------------------------------!
   !                               !
@@ -102,9 +102,9 @@
   !    solution can now start     !
   !                               !
   !-------------------------------!
-  if(comm % solve .eq. ON) then
+  if(opts % solve .eq. ON) then
 
-    if(comm % messages .eq. ON) then
+    if(opts % messages .eq. ON) then
       print *, "Solving conservation equations.  Please wait!"
     end if
 
@@ -120,8 +120,8 @@
     !---------------------------------------!
     !   Discretize conservation equations   !
     !---------------------------------------!
-    call File_Mod_Load_Boundary_Conditions(mesh, comm)
-    call File_Mod_Load_Material_Conditions(mesh, comm)
+    call File_Mod_Load_Boundary_Conditions(mesh, opts)
+    call File_Mod_Load_Material_Conditions(mesh, opts)
 
     !------------------------!
     !   Time stepping loop   !
@@ -130,7 +130,7 @@
 
     do i = 1, 12000
 
-      if(mod(i, 20) .eq. 0 .and. comm % messages .eq. ON) then
+      if(mod(i, 20) .eq. 0 .and. opts % messages .eq. ON) then
         print "(a,i5,es12.4)", " Current time step: ", i, dt
       end if
 
@@ -151,7 +151,7 @@
         goto 1
       end if
 
-      if(mod(i, 20) .eq. 0 .and. comm % messages .eq. ON) then
+      if(mod(i, 20) .eq. 0 .and. opts % messages .eq. ON) then
         print "(a,i5,es12.4)", " Solver iterations: ", act_it, f_res
       end if
     end do
@@ -160,33 +160,33 @@
     !-------------------------------------!
     !   Plot results in DXF file format   !
     !-------------------------------------!
-    if(comm % dxf .eq. ON) then
-      call File_Mod_Dxf_Start_Results(phi, comm)
+    if(opts % dxf .eq. ON) then
+      call File_Mod_Dxf_Start_Results(phi, opts)
       call File_Mod_Dxf_Draw_Results(phi)
       call File_Mod_Dxf_End
 
-      call File_Mod_Dxf_Start_Gradients(phi, comm)
-      call File_Mod_Dxf_Draw_Gradients(phi, comm)
+      call File_Mod_Dxf_Start_Gradients(phi, opts)
+      call File_Mod_Dxf_Draw_Gradients(phi, opts)
       call File_Mod_Dxf_End
     end if
 
     !-------------------------------------!
     !   Plot results in EPS file format   !
     !-------------------------------------!
-    if(comm % eps .eq. ON) then
-      call File_Mod_Eps_Start_Results(comm)
+    if(opts % eps .eq. ON) then
+      call File_Mod_Eps_Start_Results(opts)
       call File_Mod_Eps_Draw_Results(phi)
       call File_Mod_Eps_End
 
-      call File_Mod_Eps_Start_Gradients(comm)
-      call File_Mod_Eps_Draw_Gradients(phi, comm)
+      call File_Mod_Eps_Start_Gradients(opts)
+      call File_Mod_Eps_Draw_Gradients(phi, opts)
       call File_Mod_Eps_End
     end if
   end if
 
-  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Stop('Tripos_Main')
+  if(opts % messages .eq. ON) call Cpu_Timer_Mod_Stop('Tripos_Main')
 
-  if(comm % messages .eq. ON) print *, ""
-  if(comm % messages .eq. ON) call Cpu_Timer_Mod_Statistics()
+  if(opts % messages .eq. ON) print *, ""
+  if(opts % messages .eq. ON) call Cpu_Timer_Mod_Statistics()
 
   end program

@@ -1,12 +1,12 @@
 !==============================================================================!
-  subroutine File_Mod_Dxf_Start_Gradients(phi, comm)
+  subroutine File_Mod_Dxf_Start_Gradients(phi, opts)
 !------------------------------------------------------------------------------!
 !   Subroutine to start a .dxf file for plotting gradients.                    !
 !------------------------------------------------------------------------------!
   implicit none
 !---------------------------------[Arguments]----------------------------------!
-  type(Vector_Type) :: phi
-  type(Comm_Type)   :: comm
+  type(Vector_Type)  :: phi
+  type(Options_Type) :: opts
 !-----------------------------------[Locals]-----------------------------------!
   integer                  :: l, e, len
   character(len=CL)        :: iso_layer
@@ -34,11 +34,11 @@
   end do
   del_mag = max_mag / N_ISOLINE
 
-  if(comm % messages .eq. ON) print *, "Plotting the gradients in dxf format"
+  if(opts % messages .eq. ON) print *, "Plotting the gradients in dxf format"
 
   ! Form file name
-  len = len_trim(comm % problem_name)
-  dxf_gradients_name(    1:len  ) = comm % problem_name(1:len)
+  len = len_trim(opts % problem_name)
+  dxf_gradients_name(    1:len  ) = opts % problem_name(1:len)
   dxf_gradients_name(len+1:len+6) = ".g.dxf"
 
   ! ... and open it

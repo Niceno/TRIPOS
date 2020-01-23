@@ -29,7 +29,7 @@ VPATH = Global
 
 # Modules in the local directory
 SRC_MOD += Const_Mod.f90	\
-           Comm_Mod.f90		\
+           Options_Mod.f90	\
            Sort_Mod.f90		\
            Cpu_Timer_Mod.f90	\
            Mesh_Mod.f90		\
