@@ -4,8 +4,8 @@
 !   Computes gradients of dependent variable.                                  !
 !------------------------------------------------------------------------------!
 !----------------------------------[Modules]-----------------------------------!
-  use Vector_Mod,    only: Vector_Type
-  use Mesh_Mod,      only: Mesh_Type
+  use Vector_Mod
+  use Mesh_Mod
   use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
   implicit none

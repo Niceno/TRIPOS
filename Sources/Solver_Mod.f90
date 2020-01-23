@@ -5,9 +5,9 @@
 !------------------------------------------------------------------------------!
 !----------------------------------[Modules]-----------------------------------!
   use Const_Mod
-  use Mesh_Mod,      only: Mesh_Type
-  use Matrix_Mod,    only: Matrix_Type, Matrix_Mod_Allocate
-  use Vector_Mod,    only: Vector_Type, Vector_Mod_Allocate
+  use Mesh_Mod
+  use Matrix_Mod
+  use Vector_Mod
   use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
   implicit none

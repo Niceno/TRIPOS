@@ -5,10 +5,10 @@
 !   It relies only on SideC structure. Try to keep it that way.                !
 !------------------------------------------------------------------------------!
 !----------------------------------[Modules]-----------------------------------!
-  use Const_Mod,     only: RP, OFF
-  use Matrix_Mod,    only: Matrix_Type
-  use Vector_Mod,    only: Vector_Type
-  use Mesh_Mod,      only: Mesh_Type, Node_Type, Mesh_Mod_Area
+  use Const_Mod
+  use Matrix_Mod
+  use Vector_Mod
+  use Mesh_Mod
   use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
   implicit none

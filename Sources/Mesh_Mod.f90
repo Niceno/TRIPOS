@@ -2,8 +2,7 @@
   module Mesh_Mod
 !------------------------------------------------------------------------------!
 !----------------------------------[Modules]-----------------------------------!
-  use Const_Mod,     only: RP, MAX_NODES, ON, OFF, GREAT, OPEN, CLOSED,  &
-                           ACTIVE, WAITING, DONE
+  use Const_Mod
   use Comm_Mod
   use Cpu_Timer_Mod
 !------------------------------------------------------------------------------!
