@@ -12,7 +12,7 @@
   type(Node_Type), pointer :: node(:)
   type(Elem_Type), pointer :: elem(:)
   type(Side_Type), pointer :: side(:)
-  character(len=CL)        :: file_name
+  character(len=CL)        :: file_name = ''
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('File_Mod_Save_Mesh')
