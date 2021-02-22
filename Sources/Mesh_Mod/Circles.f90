@@ -62,6 +62,6 @@
   !   Radius' ratio   !
   !-------------------!
   elem(e) % r_rat = elem(e) % r_ex  &
-                  / elem(e) % r_in
+                  / max(elem(e) % r_in, SMALL)
 
   end subroutine
