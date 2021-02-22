@@ -40,6 +40,8 @@
   !---------------------------------------------------------------!
   time_prev = time_curr     ! store the last time which was recorded
   call cpu_time(time_curr)  ! refresh the value of time_curr
-  funct_time(old_funct) = funct_time(old_funct) + time_curr - time_prev
+  if(old_funct > 0) then    ! on the first call, old_func is 0
+    funct_time(old_funct) = funct_time(old_funct) + time_curr - time_prev
+  end if
 
   end subroutine
