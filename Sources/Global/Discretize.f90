@@ -180,9 +180,9 @@
     rhs % val(k) = rhs % val(k) + sol % val(k) * mesh % elem(e) % area_k / dt
   end do
 
-  !-----------------------------------------!
-  !   Sourcey term in the right hand side   !
-  !-----------------------------------------!
+  !----------------------------------------!
+  !   Source term in the right hand side   !
+  !----------------------------------------!
   do e = 0, mesh % n_elem - 1
 
     ! Extract element nodes
