@@ -95,7 +95,7 @@
     integer         :: n_elem, n_node, n_side
     integer         :: n_point, n_chain, n_segment
     integer         :: n_bound, n_mater
-    type(Elem_Type) :: elem(0:MAX_NODES*2)
+    type(Elem_Type) :: elem(-1:MAX_NODES*2)
     type(Node_Type) :: node(0:MAX_NODES)
     type(Node_Type) :: point(0:MAX_NODES/2)
     type(Side_Type) :: side(0:MAX_NODES*3)
