@@ -14,17 +14,16 @@
 !------------------------------------------------------------------------------!
   implicit none
 !-----------------------------------[Locals]-----------------------------------!
-  type(Options_Type)      :: opts
-  type(Mesh_Type)         :: mesh
-  integer                 :: max_it, act_it, j
-  character(3), parameter :: I = '   '  ! indent for solver output
-  real(RP)                :: dt = 1.0   ! false time step
-  real(RP)                :: f_sol, t_sol = 1.0e-8
-  real(RP)                :: c_out, t_out = 1.0e-6
-  type(Matrix_Type)       :: a
-  type(Vector_Type)       :: phi_n, phi_o
-  type(Vector_Type)       :: b
-  type(Solver_Type)       :: krylov
+  type(Options_Type)       :: opts
+  type(Mesh_Type)          :: mesh
+  integer                  :: max_it, act_it, j
+  character(14), parameter :: I = '              '  ! indent for solver output
+  real(RP)                 :: dt = 1.0              ! false time step
+  real(RP)                 :: f_sol, t_sol = 1.0e-8
+  type(Matrix_Type)        :: a
+  type(Vector_Type)        :: phi_n, phi_o
+  type(Vector_Type)        :: b
+  type(Solver_Type)        :: krylov
 !==============================================================================!
 
   call Cpu_Timer_Mod_Start('Tripos_Main')
@@ -130,17 +129,17 @@
     call Discretize(a, phi_o, b, dt)
 
     print "(a)", ""
-    print "(a,a)", I, "#=================================" // &
-                      "==================================#"
-    print "(a,a,es10.3,a)", I, "# Starting iterative procedure " // &
-                               "with target residual: ",  t_out, "     #"
-    print "(a,a)", I, "#---------------------------------" // &
-                      "----------------------------------#"
+    print "(a,a)", I, "#=======================" // &
+                      "=======================#"
+    print "(a,a)", I, "#     Starting iterative solution procedure    #"
+    print "(a,a,es12.3,a)", I, "#     with target residual of: ", t_sol, "    #"
+    print "(a,a)", I, "#-----------------------" // &
+                      "-----------------------#"
     do j = 1, 100000
 
       if(mod(j, 20) .eq. 0 .and. opts % messages .eq. ON) then
-        print "(a,a,i5,a,2es10.3,a)", I, "# Time step:", j,  &
-              "; solver and outer residuals: ", f_sol, c_out, " #"
+        print "(a,a,i5,a,es10.3,a)", I, "# Time step:", j,  &
+              "; solver residual: ", f_sol, " #"
       end if
 
       ! Actual value becomes old
@@ -153,27 +152,12 @@
       ! call Solver_Mod_Bicg(krylov, a, phi_n, b, max_it, act_it, t_sol, f_sol)
       call Solver_Mod_Cg(krylov, a, phi_n, b, max_it, act_it, t_sol, f_sol)
 
-      ! Find current residual for outer iterations
-      c_out = norm2((phi_n % val - phi_o % val))
-
       if(act_it .eq. 0) then
-        print "(a,a)", I, "#---------------------------------" // &
-                          "----------------------------------#"
-        print "(a,a,i5,a)", I, "# Solver can't converge " // &
-                               "any further at time step: ",  &
-                               j, "             #"
+        print "(a,a)", I, "#-----------------------" // &
+                          "-----------------------#"
+        print "(a,a,i5,a,es10.3,a)", I, "# Time step:", j,  &
+              "; final residual:  ", f_sol, " #"
         goto 1
-      end if
-
-      if(c_out < t_out) then
-        print "(a,a)", I, "#---------------------------------" // &
-                          "----------------------------------#"
-        print "(a, a,i5,a,es10.3,a)", I, "# Convergence reached at time step ",&
-                                      j, " with residual   ", c_out, " #"
-        goto 1
-      end if
-
-      if(mod(j, 20) .eq. 0 .and. opts % messages .eq. ON) then
       end if
 
       ! Gradually increase time step, you want steady solution anyway
@@ -181,8 +165,8 @@
 
     end do
 1   continue
-    print "(a,a)", I, "#=================================" // &
-                      "==================================#"
+    print "(a,a)", I, "#-----------------------" // &
+                      "-----------------------#"
 
     !-------------------------------------!
     !   Plot results in DXF file format   !
