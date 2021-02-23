@@ -11,7 +11,7 @@
 !==============================================================================!
 
   do
-    read(u, "(a)", end=1), line
+    read(u, "(a)", end=1) line
     line = adjustl(line)
     len = len_trim(line)
 
@@ -24,7 +24,7 @@
       ! Skip comment lines, and blocks of comments
       if(sc .eq. "#") then
         do while(ec .ne. "#")
-          read(u, "(a)", end=1), line
+          read(u, "(a)", end=1) line
           line = adjustl(line)
           len = len_trim(line)
           if(len .gt. 0) then
