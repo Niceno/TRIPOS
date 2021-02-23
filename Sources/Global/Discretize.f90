@@ -74,91 +74,91 @@
     end do
     print *, "Total area = ", tot_area
 
-    !-----------------------------------------!
-    !                                         !
-    !   Create system matrix on first entry   !
-    !                                         !
-    !-----------------------------------------!
+  end if
 
-    !------------------------------------------------------!
-    !   Compute diffusion coefficients for system matrix   !
-    !------------------------------------------------------!
-    matrix % val(:) = 0.0
-    do s = 0, mesh % n_side-1
+  !-----------------------------------------!
+  !                                         !
+  !   Create system matrix on first entry   !
+  !                                         !
+  !-----------------------------------------!
 
-      ! Distance between two nodes
-      c  = mesh % side(s) % c
-      d  = mesh % side(s) % d
-      xc = mesh % node(c) % x
-      yc = mesh % node(c) % y
-      xd = mesh % node(d) % x
-      yd = mesh % node(d) % y
-      delta = sqrt( (xc-xd)**2 + (yc-yd)**2 )
+  !------------------------------------------------------!
+  !   Compute diffusion coefficients for system matrix   !
+  !------------------------------------------------------!
+  matrix % val(:) = 0.0
+  do s = 0, mesh % n_side-1
 
-      ! Side mid-point
-      xs = 0.5 * (xc + xd)
-      ys = 0.5 * (yc + yd)
+    ! Distance between two nodes
+    c  = mesh % side(s) % c
+    d  = mesh % side(s) % d
+    xc = mesh % node(c) % x
+    yc = mesh % node(c) % y
+    xd = mesh % node(d) % x
+    yd = mesh % node(d) % y
+    delta = sqrt( (xc-xd)**2 + (yc-yd)**2 )
 
-      ! Voronoi point
-      ea = mesh % side(s) % ea
-      eb = mesh % side(s) % eb
+    ! Side mid-point
+    xs = 0.5 * (xc + xd)
+    ys = 0.5 * (yc + yd)
 
-      if(ea .eq. OFF) then
-        print *, "This shouldn't have happened"
-        stop
-      end if
+    ! Voronoi point
+    ea = mesh % side(s) % ea
+    eb = mesh % side(s) % eb
 
-      xa = mesh % elem(ea) % xv
-      ya = mesh % elem(ea) % yv
-      la = sqrt( (xs-xa)**2 + (ys-ya)**2 )
-      mu_a = mesh % mater(mesh % elem(ea) % material) % mu
+    if(ea .eq. OFF) then
+      print *, "This shouldn't have happened"
+      stop
+    end if
 
-      if(eb .ne. OFF) then
-        xb = mesh % elem(eb) % xv
-        yb = mesh % elem(eb) % yv
-        lb = sqrt( (xs-xb)**2 + (ys-yb)**2 )
-        mu_b = mesh % mater(mesh % elem(eb) % material) % mu
-      else
-        lb   = 0.0
-        mu_b = 0.0
-      end if
+    xa = mesh % elem(ea) % xv
+    ya = mesh % elem(ea) % yv
+    la = sqrt( (xs-xa)**2 + (ys-ya)**2 )
+    mu_a = mesh % mater(mesh % elem(ea) % material) % mu
 
-      ! Bare bone coefficient
-      matrix % fc(s) = mu_a * la / delta  &
-                     + mu_a * lb / delta
+    if(eb .ne. OFF) then
+      xb = mesh % elem(eb) % xv
+      yb = mesh % elem(eb) % yv
+      lb = sqrt( (xs-xb)**2 + (ys-yb)**2 )
+      mu_b = mesh % mater(mesh % elem(eb) % material) % mu
+    else
+      lb   = 0.0
+      mu_b = 0.0
+    end if
 
-      ! Should be multiplied with physical properties somehow
-      a12 = matrix % fc(s)
-      a21 = matrix % fc(s)
+    ! Bare bone coefficient
+    matrix % fc(s) = mu_a * la / delta  &
+                   + mu_a * lb / delta
 
-      ! Insert into matrix
-      matrix % val(matrix % dia(c))  = matrix % val(matrix % dia(c))  + a12
-      matrix % val(matrix % dia(d))  = matrix % val(matrix % dia(d))  + a21
-      matrix % val(matrix % pos(1,s)) = matrix % val(matrix % pos(1,s)) - a12
-      matrix % val(matrix % pos(2,s)) = matrix % val(matrix % pos(2,s)) - a21
-    end do
+    ! Should be multiplied with physical properties somehow
+    a12 = matrix % fc(s)
+    a21 = matrix % fc(s)
 
-    !----------------------------------------!
-    !   Unsteady term in the system matrix   !
-    !----------------------------------------!
-    do e = 0, mesh % n_elem - 1
+    ! Insert into matrix
+    matrix % val(matrix % dia(c))  = matrix % val(matrix % dia(c))  + a12
+    matrix % val(matrix % dia(d))  = matrix % val(matrix % dia(d))  + a21
+    matrix % val(matrix % pos(1,s)) = matrix % val(matrix % pos(1,s)) - a12
+    matrix % val(matrix % pos(2,s)) = matrix % val(matrix % pos(2,s)) - a21
+  end do
 
-      ! Extract element nodes
-      i = mesh % elem(e) % i
-      j = mesh % elem(e) % j
-      k = mesh % elem(e) % k
+  !----------------------------------------!
+  !   Unsteady term in the system matrix   !
+  !----------------------------------------!
+  do e = 0, mesh % n_elem - 1
 
-      matrix % val(matrix % dia(i)) = matrix % val(matrix % dia(i))  &
-                                    + mesh % elem(e) % area_i / dt
+    ! Extract element nodes
+    i = mesh % elem(e) % i
+    j = mesh % elem(e) % j
+    k = mesh % elem(e) % k
 
-      matrix % val(matrix % dia(j)) = matrix % val(matrix % dia(j))  &
-                                    + mesh % elem(e) % area_j / dt
+    matrix % val(matrix % dia(i)) = matrix % val(matrix % dia(i))  &
+                                  + mesh % elem(e) % area_i / dt
 
-      matrix % val(matrix % dia(k)) = matrix % val(matrix % dia(k))  &
-                                    + mesh % elem(e) % area_k / dt
-    end do
+    matrix % val(matrix % dia(j)) = matrix % val(matrix % dia(j))  &
+                                  + mesh % elem(e) % area_j / dt
 
-  end if  ! if first_entry
+    matrix % val(matrix % dia(k)) = matrix % val(matrix % dia(k))  &
+                                  + mesh % elem(e) % area_k / dt
+  end do
 
   !-----------------------------!
   !                             !
